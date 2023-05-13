@@ -1,13 +1,13 @@
-import Image from "next/image";
-import AuthForm from "./components/AuthForm";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import Image from 'next/image';
+import AuthForm from './components/AuthForm';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 export default async function Auth() {
   const session = await getServerSession();
 
   if (session) {
-    return redirect("/conversations");
+    return redirect('/conversations');
   }
 
   return (
@@ -17,10 +17,10 @@ export default async function Auth() {
         min-h-full 
         flex-col 
         justify-center 
+        bg-gray-100 
         py-12 
         sm:px-6 
-        lg:px-8 
-        bg-gray-100
+        lg:px-8
       "
     >
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

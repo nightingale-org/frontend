@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import axios from "axios";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { User } from "@prisma/client";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { User } from '@prisma/client';
 
-import Input from "../inputs/Input";
-import Select from "../inputs/Select";
-import Modal from "./Modal";
-import Button from "../Button";
-import { toast } from "react-hot-toast";
+import Input from '../inputs/Input';
+import Select from '../inputs/Select';
+import Modal from './Modal';
+import Button from '../Button';
+import { toast } from 'react-hot-toast';
 
 interface GroupChatModalProps {
   isOpen?: boolean;
@@ -18,11 +18,7 @@ interface GroupChatModalProps {
   users: User[];
 }
 
-const GroupChatModal: React.FC<GroupChatModalProps> = ({
-  isOpen,
-  onClose,
-  users = [],
-}) => {
+const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, users = [] }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,29 +27,29 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
-      members: [],
-    },
+      name: '',
+      members: []
+    }
   });
 
-  const members = watch("members");
+  const members = watch('members');
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
     axios
-      .post("/api/conversations", {
+      .post('/api/conversations', {
         ...data,
-        isGroup: true,
+        isGroup: true
       })
       .then(() => {
         router.refresh();
         onClose();
       })
-      .catch(() => toast.error("Something went wrong!"))
+      .catch(() => toast.error('Something went wrong!'))
       .finally(() => setIsLoading(false));
   };
 
@@ -89,11 +85,11 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
                 label="Members"
                 options={users.map((user) => ({
                   value: user.id,
-                  label: user.name,
+                  label: user.name
                 }))}
                 onChange={(value) =>
-                  setValue("members", value, {
-                    shouldValidate: true,
+                  setValue('members', value, {
+                    shouldValidate: true
                   })
                 }
                 value={members}
@@ -102,12 +98,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <Button
-            disabled={isLoading}
-            onClick={onClose}
-            type="button"
-            secondary
-          >
+          <Button disabled={isLoading} onClick={onClose} type="button" secondary>
             Cancel
           </Button>
           <Button disabled={isLoading} type="submit">

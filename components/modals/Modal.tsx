@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { IoClose } from "react-icons/io5";
+import React, { Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { IoClose } from 'react-icons/io5';
 
 interface ModalProps {
   isOpen?: boolean;
@@ -58,17 +58,17 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
               <Dialog.Panel
                 className="
                   relative 
+                  w-full 
                   transform 
                   overflow-hidden 
                   rounded-lg 
                   bg-white 
-                  px-4 
-                  pb-4
+                  px-4
+                  pb-4 
                   pt-5 
                   text-left 
-                  shadow-xl 
+                  shadow-xl
                   transition-all
-                  w-full
                   sm:my-8 
                   sm:w-full 
                   sm:max-w-lg 
@@ -80,11 +80,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                     absolute 
                     right-0 
                     top-0 
+                    z-10 
                     hidden 
                     pr-4 
-                    pt-4 
+                    pt-4
                     sm:block
-                    z-10
                   "
                 >
                   <button

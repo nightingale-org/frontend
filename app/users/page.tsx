@@ -1,8 +1,8 @@
-import EmptyState from "@/components/EmptyState";
+import EmptyState from '@/components/EmptyState';
 
 export default function People() {
   return (
-    <div className="hidden lg:block lg:pl-80 h-full">
+    <div className="hidden h-full lg:block lg:pl-80">
       <EmptyState />
     </div>
   );

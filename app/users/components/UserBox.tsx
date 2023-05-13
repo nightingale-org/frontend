@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
-import { User } from "@prisma/client";
+import axios from 'axios';
+import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { User } from '@prisma/client';
 
-import Avatar from "@/components/Avatar";
-import LoadingModal from "@/components/modals/LoadingModal";
+import Avatar from '@/components/Avatar';
+import LoadingModal from '@/components/modals/LoadingModal';
 
 interface UserBoxProps {
   user: User;
@@ -18,7 +18,7 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
     setIsLoading(true);
 
     axios
-      .post("/api/conversations", { userId: user.id })
+      .post('/api/conversations', { userId: user.id })
       .then((data) => {
         router.push(`/conversations/${data.data.id}`);
       })
@@ -31,24 +31,24 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
       <div
         onClick={handleClick}
         className="
-          w-full
           relative
           flex
+          w-full
+          cursor-pointer
           items-center
           space-x-3
+          rounded-lg
           bg-white
           p-3
-          hover:bg-neutral-100
-          rounded-lg
           transition
-          cursor-pointer
+          hover:bg-neutral-100
         "
       >
         <Avatar user={user} />
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">
             <span className="absolute inset-0" aria-hidden="true" />
-            <div className="flex justify-between items-center mb-1">
+            <div className="mb-1 flex items-center justify-between">
               <p className="text-sm font-medium text-gray-900">{user.name}</p>
             </div>
           </div>

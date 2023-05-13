@@ -1,82 +1,82 @@
-"use client";
+'use client';
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { BsGithub, BsGoogle } from "react-icons/bs";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { BsGithub, BsGoogle } from 'react-icons/bs';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
-import Input from "@/components/inputs/Input";
-import AuthSocialButton from "./AuthSocialButton";
-import Button from "@/components/Button";
-import { toast } from "react-hot-toast";
+import Input from '@/components/inputs/Input';
+import AuthSocialButton from './AuthSocialButton';
+import Button from '@/components/Button';
+import { toast } from 'react-hot-toast';
 
-type Variant = "LOGIN" | "REGISTER";
+type Variant = 'LOGIN' | 'REGISTER';
 
 const AuthForm = () => {
   const router = useRouter();
-  const [variant, setVariant] = useState<Variant>("LOGIN");
+  const [variant, setVariant] = useState<Variant>('LOGIN');
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleVariant = () => {
-    if (variant === "LOGIN") {
-      setVariant("REGISTER");
+    if (variant === 'LOGIN') {
+      setVariant('REGISTER');
     } else {
-      setVariant("LOGIN");
+      setVariant('LOGIN');
     }
   };
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
+      name: '',
+      email: '',
+      password: ''
+    }
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
-    if (variant === "REGISTER") {
-      fetch("/api/register", {
-        method: "POST",
-        body: JSON.stringify(data),
+    if (variant === 'REGISTER') {
+      fetch('/api/register', {
+        method: 'POST',
+        body: JSON.stringify(data)
       })
         .then(() =>
-          signIn("credentials", {
+          signIn('credentials', {
             ...data,
-            redirect: false,
+            redirect: false
           })
         )
         .then((callback) => {
           if (callback?.error) {
-            toast.error("Invalid credentials!");
+            toast.error('Invalid credentials!');
           }
 
           if (callback?.ok) {
-            router.push("/conversations");
+            router.push('/conversations');
           }
         })
-        .catch(() => toast.error("Something went wrong!"))
+        .catch(() => toast.error('Something went wrong!'))
         .finally(() => setIsLoading(false));
     }
 
-    if (variant === "LOGIN") {
-      signIn("credentials", {
+    if (variant === 'LOGIN') {
+      signIn('credentials', {
         ...data,
-        redirect: false,
+        redirect: false
       })
         .then((callback) => {
           if (callback?.error) {
-            toast.error("Invalid credentials!");
+            toast.error('Invalid credentials!');
           }
 
           if (callback?.ok) {
-            router.push("/conversations");
+            router.push('/conversations');
           }
         })
         .finally(() => setIsLoading(false));
@@ -89,11 +89,11 @@ const AuthForm = () => {
     signIn(action, { redirect: false })
       .then((callback) => {
         if (callback?.error) {
-          toast.error("Invalid credentials!");
+          toast.error('Invalid credentials!');
         }
 
         if (callback?.ok) {
-          router.push("/conversations");
+          router.push('/conversations');
         }
       })
       .finally(() => setIsLoading(false));
@@ -112,7 +112,7 @@ const AuthForm = () => {
         "
       >
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          {variant === "REGISTER" && (
+          {variant === 'REGISTER' && (
             <Input
               disabled={isLoading}
               register={register}
@@ -142,7 +142,7 @@ const AuthForm = () => {
           />
           <div>
             <Button disabled={isLoading} fullWidth type="submit">
-              {variant === "LOGIN" ? "Sign in" : "Register"}
+              {variant === 'LOGIN' ? 'Sign in' : 'Register'}
             </Button>
           </div>
         </form>
@@ -160,41 +160,29 @@ const AuthForm = () => {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500">
-                Or continue with
-              </span>
+              <span className="bg-white px-2 text-gray-500">Or continue with</span>
             </div>
           </div>
 
           <div className="mt-6 flex gap-2">
-            <AuthSocialButton
-              icon={BsGithub}
-              onClick={() => socialAction("github")}
-            />
-            <AuthSocialButton
-              icon={BsGoogle}
-              onClick={() => socialAction("google")}
-            />
+            <AuthSocialButton icon={BsGithub} onClick={() => socialAction('github')} />
+            <AuthSocialButton icon={BsGoogle} onClick={() => socialAction('google')} />
           </div>
         </div>
         <div
           className="
-            flex
-            gap-2
-            justify-center
-            text-sm
             mt-6
+            flex
+            justify-center
+            gap-2
             px-2
+            text-sm
             text-gray-500
           "
         >
-          <div>
-            {variant === "LOGIN"
-              ? "New to Messenger?"
-              : "Already have an account?"}
-          </div>
-          <div onClick={toggleVariant} className="underline cursor-pointer">
-            {variant === "LOGIN" ? "Create an account" : "Login"}
+          <div>{variant === 'LOGIN' ? 'New to Messenger?' : 'Already have an account?'}</div>
+          <div onClick={toggleVariant} className="cursor-pointer underline">
+            {variant === 'LOGIN' ? 'Create an account' : 'Login'}
           </div>
         </div>
       </div>

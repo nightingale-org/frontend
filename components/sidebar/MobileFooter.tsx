@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import useConversation from "@/hooks/useConversation";
-import useRoutes from "@/hooks/useRoutes";
-import MobileItem from "./MobileItem";
+import useConversation from '@/hooks/useConversation';
+import useRoutes from '@/hooks/useRoutes';
+import MobileItem from './MobileItem';
 
 const MobileFooter = () => {
   const routes = useRoutes();
@@ -16,14 +16,14 @@ const MobileFooter = () => {
     <div
       className="
         fixed
-        justify-between
-        w-full
         bottom-0
         z-40
         flex
+        w-full
         items-center
-        bg-white
+        justify-between
         border-t-[1px]
+        bg-white
         lg:hidden
       "
     >

@@ -1,8 +1,8 @@
-import getCurrentUser from "@/actions/getCurrentUser";
-import { NextResponse } from "next/server";
+import getCurrentUser from '@/actions/getCurrentUser';
+import { NextResponse } from 'next/server';
 
-import prisma from "@/libs/prismadb";
-import { pusherServer } from "@/libs/pusher";
+import prisma from '@/libs/prismadb';
+import { pusherServer } from '@/libs/pusher';
 
 export async function POST(request: Request) {
   try {
@@ -11,14 +11,13 @@ export async function POST(request: Request) {
     const { userId, isGroup, members, name } = body;
 
     if (!currentUser?.id || !currentUser?.email) {
-      return new NextResponse("Unauthorized", { status: 400 });
+      return new NextResponse('Unauthorized', { status: 400 });
     }
 
     if (isGroup && (!members || members.length < 2 || !name)) {
-      return new NextResponse(
-        "There should be at least 3 members inside a group.",
-        { status: 400 }
-      );
+      return new NextResponse('There should be at least 3 members inside a group.', {
+        status: 400
+      });
     }
 
     if (isGroup) {
@@ -29,23 +28,23 @@ export async function POST(request: Request) {
           users: {
             connect: [
               ...members.map((member: { value: string }) => ({
-                id: member.value,
+                id: member.value
               })),
               {
-                id: currentUser.id,
-              },
-            ],
-          },
+                id: currentUser.id
+              }
+            ]
+          }
         },
         include: {
-          users: true,
-        },
+          users: true
+        }
       });
 
       // Update all connections with new conversation
       newConversation.users.forEach((user) => {
         if (user.email) {
-          pusherServer.trigger(user.email, "conversation:new", newConversation);
+          pusherServer.trigger(user.email, 'conversation:new', newConversation);
         }
       });
 
@@ -57,16 +56,16 @@ export async function POST(request: Request) {
         OR: [
           {
             userIds: {
-              equals: [currentUser.id, userId],
-            },
+              equals: [currentUser.id, userId]
+            }
           },
           {
             userIds: {
-              equals: [userId, currentUser.id],
-            },
-          },
-        ],
-      },
+              equals: [userId, currentUser.id]
+            }
+          }
+        ]
+      }
     });
 
     const singleConversation = existingConversations[0];
@@ -80,28 +79,28 @@ export async function POST(request: Request) {
         users: {
           connect: [
             {
-              id: currentUser.id,
+              id: currentUser.id
             },
             {
-              id: userId,
-            },
-          ],
-        },
+              id: userId
+            }
+          ]
+        }
       },
       include: {
-        users: true,
-      },
+        users: true
+      }
     });
 
     // Update all connections with new conversation
     newConversation.users.map((user) => {
       if (user.email) {
-        pusherServer.trigger(user.email, "conversation:new", newConversation);
+        pusherServer.trigger(user.email, 'conversation:new', newConversation);
       }
     });
 
     return NextResponse.json(newConversation);
   } catch (error) {
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

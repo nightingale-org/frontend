@@ -1,4 +1,3 @@
-
 const plugin = require('tailwindcss/plugin');
 const colors = require('tailwindcss/colors');
 
@@ -14,7 +13,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)'],
-        mono: ['var(--font-roboto-mono)'],
+        mono: ['var(--font-roboto-mono)']
       },
       colors: {
         gray: colors.neutral,
@@ -50,8 +49,8 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require("@tailwindcss/forms")({
-      strategy: "class",
+    require('@tailwindcss/forms')({
+      strategy: 'class'
     }),
     plugin(({ matchUtilities, theme }) => {
       matchUtilities(

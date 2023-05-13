@@ -1,5 +1,5 @@
-import prisma from "@/libs/prismadb";
-import { getServerSession } from "next-auth";
+import prisma from '@/libs/prismadb';
+import { getServerSession } from 'next-auth';
 
 const getUsers = async () => {
   const session = await getServerSession();
@@ -11,13 +11,13 @@ const getUsers = async () => {
   try {
     const users = await prisma.user.findMany({
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc'
       },
       where: {
         NOT: {
-          email: session.user.email,
-        },
-      },
+          email: session.user.email
+        }
+      }
     });
 
     return users;

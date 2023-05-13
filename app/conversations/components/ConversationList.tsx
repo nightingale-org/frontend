@@ -1,16 +1,18 @@
-"use client";
+'use client';
 
-import { User } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { MdOutlineGroupAdd } from "react-icons/md";
-import clsx from "clsx";
+import { User } from '@prisma/client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { MdOutlineGroupAdd } from 'react-icons/md';
+import clsx from 'clsx';
 
-import useConversation from "@/hooks/useConversation";
-import { pusherClient } from "@/libs/pusher";
-import GroupChatModal from "@/components/modals/GroupChatModal";
-import ConversationBox from "./ConversationBox";
-import { ConversationWithUserAndMessages } from "../../../@types";
+import useConversation from '@/hooks/useConversation';
+import { pusherClient } from '@/libs/pusher';
+import ConversationBox from './ConversationBox';
+import { ConversationWithUserAndMessages } from '../../../@types';
+import dynamic from 'next/dynamic';
+
+const GroupChatModal = dynamic(() => import('@/components/modals/GroupChatModal'), { ssr: false });
 
 interface ConversationListProps {
   conversations: ConversationWithUserAndMessages[];
@@ -22,7 +24,7 @@ interface ConversationListProps {
 const ConversationList: React.FC<ConversationListProps> = ({
   conversations: initialConversations,
   users,
-  userEmail,
+  userEmail
 }) => {
   const [conversations, setConversations] = useState(initialConversations);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,7 +47,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
           if (currentConversation.id === conversation.id) {
             return {
               ...currentConversation,
-              messages: conversation.messages,
+              messages: conversation.messages
             };
           }
 
@@ -70,48 +72,44 @@ const ConversationList: React.FC<ConversationListProps> = ({
       });
     };
 
-    pusherClient.bind("conversation:update", updateHandler);
-    pusherClient.bind("conversation:new", newHandler);
-    pusherClient.bind("conversation:remove", removeHandler);
+    pusherClient.bind('conversation:update', updateHandler);
+    pusherClient.bind('conversation:new', newHandler);
+    pusherClient.bind('conversation:remove', removeHandler);
   }, [pusherKey, router]);
 
   return (
     <>
-      <GroupChatModal
-        users={users}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <GroupChatModal users={users} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <aside
         className={clsx(
           `
         fixed
         inset-y-0
-        pb-20
-        lg:pb-0
-        lg:left-20
-        lg:w-80
-        lg:block
         overflow-y-auto
         border-r
         border-gray-200
+        pb-20
+        lg:left-20
+        lg:block
+        lg:w-80
+        lg:pb-0
       `,
-          isOpen ? "hidden" : "block w-full left-0"
+          isOpen ? 'hidden' : 'left-0 block w-full'
         )}
       >
         <div className="px-5">
-          <div className="flex justify-between mb-4 pt-4">
+          <div className="mb-4 flex justify-between pt-4">
             <div className="text-2xl font-bold text-neutral-800">Messages</div>
             <div
               onClick={() => setIsModalOpen(true)}
               className="
-                rounded-full
-                p-2
-                bg-gray-100
-                text-gray-600
                 cursor-pointer
-                hover:opacity-75
+                rounded-full
+                bg-gray-100
+                p-2
+                text-gray-600
                 transition
+                hover:opacity-75
               "
             >
               <MdOutlineGroupAdd size={20} />

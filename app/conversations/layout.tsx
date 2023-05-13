@@ -1,18 +1,14 @@
-import { getServerSession } from "next-auth";
-import getConversations from "@/actions/getConversations";
-import getUsers from "@/actions/getUsers";
-import Sidebar from "@/components/sidebar/Sidebar";
-import ConversationList from "./components/ConversationList";
+import { getServerSession } from 'next-auth';
+import getConversations from '@/actions/getConversations';
+import getUsers from '@/actions/getUsers';
+import Sidebar from '@/components/sidebar/Sidebar';
+import ConversationList from './components/ConversationList';
 
-export default async function ConversationsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function ConversationsLayout({ children }: { children: React.ReactNode }) {
   const [conversations, users, session] = await Promise.all([
     getConversations(),
     getUsers(),
-    getServerSession(),
+    getServerSession()
   ]);
 
   return (

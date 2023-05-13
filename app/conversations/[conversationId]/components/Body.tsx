@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 
-import { pusherClient } from "@/libs/pusher";
-import useConversation from "@/hooks/useConversation";
-import MessageBox from "./MessageBox";
-import type { MessageWithSenderAndSeen } from "../../../../@types";
+import { pusherClient } from '@/libs/pusher';
+import useConversation from '@/hooks/useConversation';
+import MessageBox from './MessageBox';
+import type { MessageWithSenderAndSeen } from '@/@types';
 
 interface BodyProps {
   initialMessages: MessageWithSenderAndSeen[];
@@ -14,8 +14,7 @@ interface BodyProps {
 
 const Body: React.FC<BodyProps> = ({ initialMessages }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] =
-    useState<MessageWithSenderAndSeen[]>(initialMessages);
+  const [messages, setMessages] = useState<MessageWithSenderAndSeen[]>(initialMessages);
 
   const { conversationId } = useConversation();
 
@@ -50,24 +49,20 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
       );
     };
 
-    pusherClient.bind("messages:new", messageHandler);
-    pusherClient.bind("message:update", updateMessageHandler);
+    pusherClient.bind('messages:new', messageHandler);
+    pusherClient.bind('message:update', updateMessageHandler);
 
     return () => {
       pusherClient.unsubscribe(conversationId);
-      pusherClient.unbind("messages:new", messageHandler);
-      pusherClient.unbind("message:update", updateMessageHandler);
+      pusherClient.unbind('messages:new', messageHandler);
+      pusherClient.unbind('message:update', updateMessageHandler);
     };
   }, [conversationId]);
 
   return (
     <div className="flex-1 overflow-y-auto">
       {messages.map((message, i) => (
-        <MessageBox
-          isLast={i === messages.length - 1}
-          key={message.id}
-          messageBody={message}
-        />
+        <MessageBox isLast={i === messages.length - 1} key={message.id} messageBody={message} />
       ))}
       <div className="pt-24" ref={bottomRef} />
     </div>

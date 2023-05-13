@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Fragment, useMemo, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { IoClose, IoTrash } from "react-icons/io5";
-import { Conversation, User } from "@prisma/client";
-import { format } from "date-fns";
+import { Fragment, useMemo, useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { IoClose, IoTrash } from 'react-icons/io5';
+import { Conversation, User } from '@prisma/client';
+import { format } from 'date-fns';
 
-import useOtherUser from "@/hooks/useOtherUser";
-import useActiveList from "@/hooks/useActiveList";
+import useOtherUser from '@/hooks/useOtherUser';
+import useActiveList from '@/hooks/useActiveList';
 
-import Avatar from "@/components/Avatar";
-import AvatarGroup from "@/components/AvatarGroup";
-import ConfirmModal from "./ConfirmModal";
+import Avatar from '@/components/Avatar';
+import AvatarGroup from '@/components/AvatarGroup';
+import ConfirmModal from './ConfirmModal';
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -21,16 +21,12 @@ interface ProfileDrawerProps {
   };
 }
 
-const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
-  isOpen,
-  onClose,
-  data,
-}) => {
+const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const otherUser = useOtherUser(data);
 
   const joinedDate = useMemo(() => {
-    return format(new Date(otherUser.createdAt), "PP");
+    return format(new Date(otherUser.createdAt), 'PP');
   }, [otherUser.createdAt]);
 
   const title = useMemo(() => {
@@ -45,15 +41,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       return `${data.users.length} members`;
     }
 
-    return isActive ? "Active" : "Offline";
+    return isActive ? 'Active' : 'Offline';
   }, [data, isActive]);
 
   return (
     <>
-      <ConfirmModal
-        isOpen={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-      />
+      <ConfirmModal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} />
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           <Transition.Child
@@ -106,20 +99,16 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             )}
                           </div>
                           <div>{title}</div>
-                          <div className="text-sm text-gray-500">
-                            {statusText}
-                          </div>
-                          <div className="flex gap-10 my-8">
+                          <div className="text-sm text-gray-500">{statusText}</div>
+                          <div className="my-8 flex gap-10">
                             <div
                               onClick={() => setConfirmOpen(true)}
-                              className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75"
+                              className="flex cursor-pointer flex-col items-center gap-3 hover:opacity-75"
                             >
-                              <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100">
                                 <IoTrash size={20} />
                               </div>
-                              <div className="text-sm font-light text-neutral-600">
-                                Delete
-                              </div>
+                              <div className="text-sm font-light text-neutral-600">Delete</div>
                             </div>
                           </div>
                           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
@@ -145,9 +134,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   sm:col-span-2
                                 "
                                   >
-                                    {data.users
-                                      .map((user) => user.email)
-                                      .join(", ")}
+                                    {data.users.map((user) => user.email).join(', ')}
                                   </dd>
                                 </div>
                               )}
@@ -199,9 +186,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                     sm:col-span-2
                                   "
                                     >
-                                      <time dateTime={joinedDate}>
-                                        {joinedDate}
-                                      </time>
+                                      <time dateTime={joinedDate}>{joinedDate}</time>
                                     </dd>
                                   </div>
                                 </>

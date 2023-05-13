@@ -1,17 +1,14 @@
-import getCurrentUser from "@/actions/getCurrentUser";
-import { NextResponse } from "next/server";
+import getCurrentUser from '@/actions/getCurrentUser';
+import { NextResponse } from 'next/server';
 
-import prisma from "@/libs/prismadb";
-import { pusherServer } from "@/libs/pusher";
+import prisma from '@/libs/prismadb';
+import { pusherServer } from '@/libs/pusher';
 
 interface IParams {
   conversationId?: string;
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: IParams }
-) {
+export async function DELETE(request: Request, { params }: { params: IParams }) {
   try {
     const { conversationId } = params;
     const currentUser = await getCurrentUser();
@@ -22,33 +19,29 @@ export async function DELETE(
 
     const existingConversation = await prisma.conversation.findUnique({
       where: {
-        id: conversationId,
+        id: conversationId
       },
       include: {
-        users: true,
-      },
+        users: true
+      }
     });
 
     if (!existingConversation) {
-      return new NextResponse("Invalid ID", { status: 400 });
+      return new NextResponse('Invalid ID', { status: 400 });
     }
 
     const deletedConversation = await prisma.conversation.deleteMany({
       where: {
         id: conversationId,
         userIds: {
-          hasSome: [currentUser.id],
-        },
-      },
+          hasSome: [currentUser.id]
+        }
+      }
     });
 
     existingConversation.users.forEach((user) => {
       if (user.email) {
-        pusherServer.trigger(
-          user.email,
-          "conversation:remove",
-          existingConversation
-        );
+        pusherServer.trigger(user.email, 'conversation:remove', existingConversation);
       }
     });
 

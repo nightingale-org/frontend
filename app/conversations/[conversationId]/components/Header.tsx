@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { HiChevronLeft } from "react-icons/hi";
-import { HiEllipsisHorizontal } from "react-icons/hi2";
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import { Conversation, User } from "@prisma/client";
+import { HiChevronLeft } from 'react-icons/hi';
+import { HiEllipsisHorizontal } from 'react-icons/hi2';
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { Conversation, User } from '@prisma/client';
 
-import useOtherUser from "@/hooks/useOtherUser";
-import useActiveList from "@/hooks/useActiveList";
+import useOtherUser from '@/hooks/useOtherUser';
+import useActiveList from '@/hooks/useActiveList';
 
-import Avatar from "@/components/Avatar";
-import AvatarGroup from "@/components/AvatarGroup";
-import ProfileDrawer from "./ProfileDrawer";
+import Avatar from '@/components/Avatar';
+import AvatarGroup from '@/components/AvatarGroup';
+import ProfileDrawer from './ProfileDrawer';
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -30,41 +30,37 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
       return `${conversation.users.length} members`;
     }
 
-    return isActive ? "Active" : "Offline";
+    return isActive ? 'Active' : 'Offline';
   }, [conversation, isActive]);
 
   return (
     <>
-      <ProfileDrawer
-        data={conversation}
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
+      <ProfileDrawer data={conversation} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <div
         className="
-        bg-white
-        w-full
         flex
-        border-b-[1px]
-        sm:px-4
-        py-3
-        px-4
-        lg:px-6
-        justify-between
+        w-full
         items-center
+        justify-between
+        border-b-[1px]
+        bg-white
+        px-4
+        py-3
         shadow-sm
+        sm:px-4
+        lg:px-6
       "
       >
-        <div className="flex gap-3 items-center">
+        <div className="flex items-center gap-3">
           <Link
             href="/conversations"
             className="
-            lg:hidden
             block
-            text-sky-500
-            hover:text-sky-600
-            transition
             cursor-pointer
+            text-sky-500
+            transition
+            hover:text-sky-600
+            lg:hidden
           "
           >
             <HiChevronLeft size={32} />
@@ -76,19 +72,17 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           )}
           <div className="flex flex-col">
             <div>{conversation.name || otherUser.name}</div>
-            <div className="text-sm font-light text-neutral-500">
-              {statusText}
-            </div>
+            <div className="text-sm font-light text-neutral-500">{statusText}</div>
           </div>
         </div>
         <HiEllipsisHorizontal
           size={32}
           onClick={() => setDrawerOpen(true)}
           className="
-          text-sky-500
           cursor-pointer
-          hover:text-sky-600
+          text-sky-500
           transition
+          hover:text-sky-600
         "
         />
       </div>

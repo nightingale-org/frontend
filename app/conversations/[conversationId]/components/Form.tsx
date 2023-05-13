@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
-import MessageInput from "./MessageInput";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
-import { CldUploadButton } from "next-cloudinary";
-import useConversation from "@/hooks/useConversation";
+import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2';
+import MessageInput from './MessageInput';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import axios from 'axios';
+import { CldUploadButton } from 'next-cloudinary';
+import useConversation from '@/hooks/useConversation';
 
 const Form = () => {
   const { conversationId } = useConversation();
@@ -14,53 +14,46 @@ const Form = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
-      message: "",
-    },
+      message: ''
+    }
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setValue("message", "", { shouldValidate: true });
-    axios.post("/api/messages", {
+    setValue('message', '', { shouldValidate: true });
+    axios.post('/api/messages', {
       ...data,
-      conversationId: conversationId,
+      conversationId: conversationId
     });
   };
 
   const handleUpload = (result: any) => {
-    axios.post("/api/messages", {
+    axios.post('/api/messages', {
       image: result.info.secure_url,
-      conversationId: conversationId,
+      conversationId: conversationId
     });
   };
 
   return (
     <div
       className="
-        py-4
-        px-4
-        bg-white
-        border-t
         flex
+        w-full
         items-center
         gap-2
+        border-t
+        bg-white
+        px-4
+        py-4
         lg:gap-4
-        w-full
       "
     >
-      <CldUploadButton
-        options={{ maxFiles: 1 }}
-        onUpload={handleUpload}
-        uploadPreset="pgc9ehd5"
-      >
+      <CldUploadButton options={{ maxFiles: 1 }} onUpload={handleUpload} uploadPreset="pgc9ehd5">
         <HiPhoto size={30} className="text-sky-500" />
       </CldUploadButton>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center gap-2 lg:gap-4 w-full"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full items-center gap-2 lg:gap-4">
         <MessageInput
           id="message"
           register={register}
@@ -71,12 +64,12 @@ const Form = () => {
         <button
           type="submit"
           className="
-            rounded-full
-            p-2
-            bg-sky-500
             cursor-pointer
-            hover:bg-sky-600
+            rounded-full
+            bg-sky-500
+            p-2
             transition
+            hover:bg-sky-600
           "
         >
           <HiPaperAirplane size={18} className="text-white" />

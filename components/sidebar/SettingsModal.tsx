@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import axios from "axios";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { User } from "@prisma/client";
-import { CldUploadButton } from "next-cloudinary";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { User } from '@prisma/client';
+import { CldUploadButton } from 'next-cloudinary';
 
-import Input from "../inputs/Input";
-import Modal from "../modals/Modal";
-import Button from "../Button";
-import Image from "next/image";
-import { toast } from "react-hot-toast";
+import Input from '../inputs/Input';
+import Modal from '../modals/Modal';
+import Button from '../Button';
+import Image from 'next/image';
+import { toast } from 'react-hot-toast';
 
 interface SettingsModalProps {
   isOpen?: boolean;
@@ -19,11 +19,7 @@ interface SettingsModalProps {
   currentUser: User;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({
-  isOpen,
-  onClose,
-  currentUser = {},
-}) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser = {} }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,19 +28,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
       name: currentUser?.name,
-      image: currentUser?.image,
-    },
+      image: currentUser?.image
+    }
   });
 
-  const image = watch("image");
+  const image = watch('image');
 
   const handleUpload = (result: any) => {
-    setValue("image", result.info.secure_url, {
-      shouldValidate: true,
+    setValue('image', result.info.secure_url, {
+      shouldValidate: true
     });
   };
 
@@ -52,12 +48,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     setIsLoading(true);
 
     axios
-      .post("/api/settings", data)
+      .post('/api/settings', data)
       .then(() => {
         router.refresh();
         onClose();
       })
-      .catch(() => toast.error("Something went wrong!"))
+      .catch(() => toast.error('Something went wrong!'))
       .finally(() => setIsLoading(false));
   };
 
@@ -76,9 +72,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             >
               Profile
             </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Edit your public information.
-            </p>
+            <p className="mt-1 text-sm leading-6 text-gray-600">Edit your public information.</p>
 
             <div className="mt-10 flex flex-col gap-y-8">
               <Input
@@ -107,9 +101,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     width="48"
                     height="48"
                     className="rounded-full"
-                    src={
-                      image || currentUser?.image || "/images/placeholder.jpg"
-                    }
+                    src={image || currentUser?.image || '/images/placeholder.jpg'}
                     alt="Avatar"
                   />
                   <CldUploadButton

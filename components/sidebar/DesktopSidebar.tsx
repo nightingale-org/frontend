@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import DesktopItem from "./DesktopItem";
-import useRoutes from "@/hooks/useRoutes";
-import SettingsModal from "./SettingsModal";
-import { useState } from "react";
-import Avatar from "../Avatar";
-import { User } from "@prisma/client";
+import DesktopItem from './DesktopItem';
+import useRoutes from '@/hooks/useRoutes';
+import SettingsModal from './SettingsModal';
+import { useState } from 'react';
+import Avatar from '../Avatar';
+import { User } from '@prisma/client';
 
 interface DesktopSidebarProps {
   currentUser: User;
@@ -17,27 +17,23 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
 
   return (
     <>
-      <SettingsModal
-        currentUser={currentUser}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      />
+      <SettingsModal currentUser={currentUser} isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <div
         className="
         hidden
+        justify-between
         lg:fixed
         lg:inset-y-0
         lg:left-0
         lg:z-40
-        lg:w-20
-        xl:px-6
-        lg:overflow-y-auto
-        lg:bg-white
-        lg:border-r-[1px]
-        lg:pb-4
         lg:flex
+        lg:w-20
         lg:flex-col
-        justify-between
+        lg:overflow-y-auto
+        lg:border-r-[1px]
+        lg:bg-white
+        lg:pb-4
+        xl:px-6
       "
       >
         <nav className="mt-4 flex flex-col justify-between">
@@ -54,10 +50,10 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
             ))}
           </ul>
         </nav>
-        <nav className="mt-4 flex flex-col justify-between items-center">
+        <nav className="mt-4 flex flex-col items-center justify-between">
           <div
             onClick={() => setIsOpen(true)}
-            className="cursor-pointer hover:opacity-75 transition"
+            className="cursor-pointer transition hover:opacity-75"
           >
             <Avatar user={currentUser} />
           </div>
