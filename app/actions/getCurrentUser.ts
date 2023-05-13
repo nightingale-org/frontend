@@ -1,6 +1,6 @@
 import prisma from "@/app/libs/prismadb";
 import { getServerSession } from "next-auth";
-import {User} from "@prisma/client";
+import { User } from "@prisma/client";
 
 const getCurrentUser = async (): Promise<User | null> => {
   try {
@@ -12,10 +12,9 @@ const getCurrentUser = async (): Promise<User | null> => {
 
     return await prisma.user.findUnique({
       where: {
-        email: session.user.email as string
-      }
+        email: session.user.email as string,
+      },
     });
-
   } catch (error: any) {
     return null;
   }

@@ -1,9 +1,7 @@
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "./getCurrentUser";
 
-const getConversationById = async (
-  conversationId: string
-) => {
+const getConversationById = async (conversationId: string) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -13,14 +11,14 @@ const getConversationById = async (
 
     return await prisma.conversation.findUnique({
       where: {
-        id: conversationId
+        id: conversationId,
       },
       include: {
         users: true,
       },
     });
   } catch (error: any) {
-    console.log(error, 'SERVER_ERROR')
+    console.log(error, "SERVER_ERROR");
     return null;
   }
 };

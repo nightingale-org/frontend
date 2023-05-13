@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MdOutlineGroupAdd } from 'react-icons/md';
+import { MdOutlineGroupAdd } from "react-icons/md";
 import clsx from "clsx";
 
 import useConversation from "@/app/hooks/useConversation";
@@ -16,13 +16,13 @@ interface ConversationListProps {
   conversations: ConversationWithUserAndMessages[];
   users: User[];
   title?: string;
-  userEmail?: string | null
+  userEmail?: string | null;
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ 
-  conversations: initialConversations, 
+const ConversationList: React.FC<ConversationListProps> = ({
+  conversations: initialConversations,
   users,
-  userEmail
+  userEmail,
 }) => {
   const [conversations, setConversations] = useState(initialConversations);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,47 +40,51 @@ const ConversationList: React.FC<ConversationListProps> = ({
     pusherClient.subscribe(pusherKey);
 
     const updateHandler = (conversation: ConversationWithUserAndMessages) => {
-      setConversations((current) => current.map((currentConversation) => {
-        if (currentConversation.id === conversation.id) {
-          return {
-            ...currentConversation,
-            messages: conversation.messages
-          };
-        }
+      setConversations((current) =>
+        current.map((currentConversation) => {
+          if (currentConversation.id === conversation.id) {
+            return {
+              ...currentConversation,
+              messages: conversation.messages,
+            };
+          }
 
-        return currentConversation;
-      }));
-    }
+          return currentConversation;
+        })
+      );
+    };
 
     const newHandler = (conversation: ConversationWithUserAndMessages) => {
       setConversations((current) => {
-        if (current.find(v => v.id === conversation.id)) {
+        if (current.find((v) => v.id === conversation.id)) {
           return current;
         }
 
-        return [conversation, ...current]
+        return [conversation, ...current];
       });
-    }
+    };
 
     const removeHandler = (conversation: ConversationWithUserAndMessages) => {
       setConversations((current) => {
-        return [...current.filter((convo) => convo.id !== conversation.id)]
+        return [...current.filter((convo) => convo.id !== conversation.id)];
       });
-    }
+    };
 
-    pusherClient.bind('conversation:update', updateHandler)
-    pusherClient.bind('conversation:new', newHandler)
-    pusherClient.bind('conversation:remove', removeHandler)
+    pusherClient.bind("conversation:update", updateHandler);
+    pusherClient.bind("conversation:new", newHandler);
+    pusherClient.bind("conversation:remove", removeHandler);
   }, [pusherKey, router]);
 
   return (
     <>
-      <GroupChatModal 
-        users={users} 
-        isOpen={isModalOpen} 
+      <GroupChatModal
+        users={users}
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      <aside className={clsx(`
+      <aside
+        className={clsx(
+          `
         fixed 
         inset-y-0 
         pb-20
@@ -91,14 +95,15 @@ const ConversationList: React.FC<ConversationListProps> = ({
         overflow-y-auto 
         border-r 
         border-gray-200 
-      `, isOpen ? 'hidden' : 'block w-full left-0')}>
+      `,
+          isOpen ? "hidden" : "block w-full left-0"
+        )}
+      >
         <div className="px-5">
           <div className="flex justify-between mb-4 pt-4">
-            <div className="text-2xl font-bold text-neutral-800">
-              Messages
-            </div>
-            <div 
-              onClick={() => setIsModalOpen(true)} 
+            <div className="text-2xl font-bold text-neutral-800">Messages</div>
+            <div
+              onClick={() => setIsModalOpen(true)}
               className="
                 rounded-full 
                 p-2 
@@ -123,7 +128,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         </div>
       </aside>
     </>
-   );
-}
- 
+  );
+};
+
 export default ConversationList;

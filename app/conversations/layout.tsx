@@ -5,23 +5,23 @@ import Sidebar from "../components/sidebar/Sidebar";
 import ConversationList from "./components/ConversationList";
 
 export default async function ConversationsLayout({
-  children
+  children,
 }: {
-  children: React.ReactNode,
-  }) {
+  children: React.ReactNode;
+}) {
   const [conversations, users, session] = await Promise.all([
     getConversations(),
     getUsers(),
-    getServerSession()
-  ])
+    getServerSession(),
+  ]);
 
   return (
     // @ts-expect-error Server Component
     <Sidebar>
       <div className="h-full">
-        <ConversationList 
-          users={users} 
-          title="Messages" 
+        <ConversationList
+          users={users}
+          title="Messages"
           conversations={conversations}
           userEmail={session?.user?.email}
         />

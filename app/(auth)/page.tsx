@@ -4,14 +4,14 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 export default async function Auth() {
-  const session = await getServerSession()
+  const session = await getServerSession();
 
   if (session) {
-    return redirect("/conversations")
+    return redirect("/conversations");
   }
 
   return (
-    <div 
+    <div
       className="
         flex 
         min-h-full 
@@ -31,7 +31,7 @@ export default async function Auth() {
           src="/images/logo.png"
           alt="Logo"
         />
-        <h2 
+        <h2
           className="
             mt-6 
             text-center 
@@ -40,11 +40,11 @@ export default async function Auth() {
             tracking-tight 
             text-gray-900
           "
-          >
-            Sign in to your account
+        >
+          Sign in to your account
         </h2>
       </div>
-      <AuthForm />      
-  </div>
-  )
+      <AuthForm />
+    </div>
+  );
 }

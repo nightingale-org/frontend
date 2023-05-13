@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
@@ -11,15 +11,15 @@ import AvatarGroup from "@/app/components/AvatarGroup";
 import { ConversationWithUserAndMessages, MessageWithSeen } from "@/app/@types";
 
 interface ConversationBoxProps {
-  conversation: ConversationWithUserAndMessages,
+  conversation: ConversationWithUserAndMessages;
   selected?: boolean;
   userEmail?: string | null;
 }
 
-const ConversationBox: React.FC<ConversationBoxProps> = ({ 
-  conversation, 
+const ConversationBox: React.FC<ConversationBoxProps> = ({
+  conversation,
   selected,
-  userEmail
+  userEmail,
 }) => {
   // TODO: n + 1 fix
   const otherUser = useOtherUser(conversation);
@@ -27,10 +27,12 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
 
   const handleClick = () => {
     router.push(`/conversations/${conversation.id}`);
-  }
+  };
 
-  const lastMessage = conversation.messages.at(-1) as MessageWithSeen | undefined;
-  
+  const lastMessage = conversation.messages.at(-1) as
+    | MessageWithSeen
+    | undefined;
+
   const hasSeen = useMemo(() => {
     if (!lastMessage) {
       return false;
@@ -42,26 +44,26 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
       return false;
     }
 
-    return seenArray
-      .filter((user) => user.email === userEmail).length !== 0;
+    return seenArray.filter((user) => user.email === userEmail).length !== 0;
   }, [userEmail, lastMessage]);
 
   const lastMessageText = useMemo(() => {
     if (lastMessage?.image) {
-      return 'Sent an image';
+      return "Sent an image";
     }
 
     if (lastMessage?.body) {
-      return lastMessage?.body
+      return lastMessage?.body;
     }
 
-    return 'Started a conversation';
+    return "Started a conversation";
   }, [lastMessage]);
 
-  return ( 
+  return (
     <div
       onClick={handleClick}
-      className={clsx(`
+      className={clsx(
+        `
         w-full 
         relative 
         flex 
@@ -73,7 +75,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         transition
         cursor-pointer
         `,
-        selected ? 'bg-neutral-100' : 'bg-white'
+        selected ? "bg-neutral-100" : "bg-white"
       )}
     >
       {conversation.isGroup ? (
@@ -89,30 +91,32 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
               {conversation.name || (otherUser ? otherUser.name : "error")}
             </p>
             {lastMessage?.createdAt && (
-              <p 
+              <p
                 className="
                   text-xs 
                   text-gray-400 
                   font-light
                 "
               >
-                {format(new Date(lastMessage.createdAt), 'p')}
+                {format(new Date(lastMessage.createdAt), "p")}
               </p>
             )}
           </div>
-          <p 
-            className={clsx(`
+          <p
+            className={clsx(
+              `
               truncate 
               text-sm
               `,
-              hasSeen ? 'text-gray-500' : 'text-black font-medium'
-            )}>
-              {lastMessageText}
-            </p>
+              hasSeen ? "text-gray-500" : "text-black font-medium"
+            )}
+          >
+            {lastMessageText}
+          </p>
         </div>
       </div>
     </div>
   );
-}
- 
+};
+
 export default ConversationBox;

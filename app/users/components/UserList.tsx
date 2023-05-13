@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { User } from "@prisma/client";
 
@@ -8,11 +8,9 @@ interface UserListProps {
   users: User[];
 }
 
-const UserList: React.FC<UserListProps> = ({ 
-  users, 
-}) => {
-  return ( 
-    <aside 
+const UserList: React.FC<UserListProps> = ({ users }) => {
+  return (
+    <aside
       className="
         fixed 
         inset-y-0 
@@ -29,7 +27,7 @@ const UserList: React.FC<UserListProps> = ({
     >
       <div className="px-5">
         <div className="flex-col">
-          <div 
+          <div
             className="
               text-2xl 
               font-bold 
@@ -41,14 +39,11 @@ const UserList: React.FC<UserListProps> = ({
           </div>
         </div>
         {users.map((user) => (
-          <UserBox
-            key={user.id}
-            user={user}
-          />
+          <UserBox key={user.id} user={user} />
         ))}
       </div>
     </aside>
   );
-}
- 
+};
+
 export default UserList;
