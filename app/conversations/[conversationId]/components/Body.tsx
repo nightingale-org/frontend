@@ -3,10 +3,10 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
-import { pusherClient } from "@/app/libs/pusher";
-import useConversation from "@/app/hooks/useConversation";
+import { pusherClient } from "@/libs/pusher";
+import useConversation from "@/hooks/useConversation";
 import MessageBox from "./MessageBox";
-import type { MessageWithSenderAndSeen } from "@/app/@types";
+import type { MessageWithSenderAndSeen } from "../../../../@types";
 
 interface BodyProps {
   initialMessages: MessageWithSenderAndSeen[];

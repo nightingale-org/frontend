@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import clsx from "clsx";
 
-import useConversation from "@/app/hooks/useConversation";
-import { pusherClient } from "@/app/libs/pusher";
-import GroupChatModal from "@/app/components/modals/GroupChatModal";
+import useConversation from "@/hooks/useConversation";
+import { pusherClient } from "@/libs/pusher";
+import GroupChatModal from "@/components/modals/GroupChatModal";
 import ConversationBox from "./ConversationBox";
-import { ConversationWithUserAndMessages } from "@/app/@types";
+import { ConversationWithUserAndMessages } from "../../../@types";
 
 interface ConversationListProps {
   conversations: ConversationWithUserAndMessages[];
@@ -85,16 +85,16 @@ const ConversationList: React.FC<ConversationListProps> = ({
       <aside
         className={clsx(
           `
-        fixed 
-        inset-y-0 
+        fixed
+        inset-y-0
         pb-20
         lg:pb-0
-        lg:left-20 
-        lg:w-80 
+        lg:left-20
+        lg:w-80
         lg:block
-        overflow-y-auto 
-        border-r 
-        border-gray-200 
+        overflow-y-auto
+        border-r
+        border-gray-200
       `,
           isOpen ? "hidden" : "block w-full left-0"
         )}
@@ -105,12 +105,12 @@ const ConversationList: React.FC<ConversationListProps> = ({
             <div
               onClick={() => setIsModalOpen(true)}
               className="
-                rounded-full 
-                p-2 
-                bg-gray-100 
-                text-gray-600 
-                cursor-pointer 
-                hover:opacity-75 
+                rounded-full
+                p-2
+                bg-gray-100
+                text-gray-600
+                cursor-pointer
+                hover:opacity-75
                 transition
               "
             >

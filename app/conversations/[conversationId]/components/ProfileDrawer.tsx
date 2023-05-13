@@ -6,11 +6,11 @@ import { IoClose, IoTrash } from "react-icons/io5";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 
-import useOtherUser from "@/app/hooks/useOtherUser";
-import useActiveList from "@/app/hooks/useActiveList";
+import useOtherUser from "@/hooks/useOtherUser";
+import useActiveList from "@/hooks/useActiveList";
 
-import Avatar from "@/app/components/Avatar";
-import AvatarGroup from "@/app/components/AvatarGroup";
+import Avatar from "@/components/Avatar";
+import AvatarGroup from "@/components/AvatarGroup";
 import ConfirmModal from "./ConfirmModal";
 
 interface ProfileDrawerProps {
@@ -128,10 +128,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 <div>
                                   <dt
                                     className="
-                                  text-sm 
-                                  font-medium 
-                                  text-gray-500 
-                                  sm:w-40 
+                                  text-sm
+                                  font-medium
+                                  text-gray-500
+                                  sm:w-40
                                   sm:flex-shrink-0
                                 "
                                   >
@@ -139,9 +139,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   </dt>
                                   <dd
                                     className="
-                                  mt-1 
-                                  text-sm 
-                                  text-gray-900 
+                                  mt-1
+                                  text-sm
+                                  text-gray-900
                                   sm:col-span-2
                                 "
                                   >
@@ -155,10 +155,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 <div>
                                   <dt
                                     className="
-                                  text-sm 
-                                  font-medium 
-                                  text-gray-500 
-                                  sm:w-40 
+                                  text-sm
+                                  font-medium
+                                  text-gray-500
+                                  sm:w-40
                                   sm:flex-shrink-0
                                 "
                                   >
@@ -166,9 +166,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   </dt>
                                   <dd
                                     className="
-                                  mt-1 
-                                  text-sm 
-                                  text-gray-900 
+                                  mt-1
+                                  text-sm
+                                  text-gray-900
                                   sm:col-span-2
                                 "
                                   >
@@ -182,10 +182,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   <div>
                                     <dt
                                       className="
-                                    text-sm 
-                                    font-medium 
-                                    text-gray-500 
-                                    sm:w-40 
+                                    text-sm
+                                    font-medium
+                                    text-gray-500
+                                    sm:w-40
                                     sm:flex-shrink-0
                                   "
                                     >
@@ -193,9 +193,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                     </dt>
                                     <dd
                                       className="
-                                    mt-1 
-                                    text-sm 
-                                    text-gray-900 
+                                    mt-1
+                                    text-sm
+                                    text-gray-900
                                     sm:col-span-2
                                   "
                                     >

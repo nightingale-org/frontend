@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import clsx from "clsx";
 
-import Avatar from "@/app/components/Avatar";
-import useOtherUser from "@/app/hooks/useOtherUser";
-import AvatarGroup from "@/app/components/AvatarGroup";
-import { ConversationWithUserAndMessages, MessageWithSeen } from "@/app/@types";
+import Avatar from "@/components/Avatar";
+import useOtherUser from "@/hooks/useOtherUser";
+import AvatarGroup from "@/components/AvatarGroup";
+import { ConversationWithUserAndMessages, MessageWithSeen } from "../../../@types";
 
 interface ConversationBoxProps {
   conversation: ConversationWithUserAndMessages;
@@ -64,12 +64,12 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
       onClick={handleClick}
       className={clsx(
         `
-        w-full 
-        relative 
-        flex 
-        items-center 
-        space-x-3 
-        p-3 
+        w-full
+        relative
+        flex
+        items-center
+        space-x-3
+        p-3
         hover:bg-neutral-100
         rounded-lg
         transition
@@ -93,8 +93,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
             {lastMessage?.createdAt && (
               <p
                 className="
-                  text-xs 
-                  text-gray-400 
+                  text-xs
+                  text-gray-400
                   font-light
                 "
               >
@@ -105,7 +105,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
           <p
             className={clsx(
               `
-              truncate 
+              truncate
               text-sm
               `,
               hasSeen ? "text-gray-500" : "text-black font-medium"

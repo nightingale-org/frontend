@@ -3,8 +3,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@prisma/client";
 
-import Avatar from "@/app/components/Avatar";
-import LoadingModal from "@/app/components/modals/LoadingModal";
+import Avatar from "@/components/Avatar";
+import LoadingModal from "@/components/modals/LoadingModal";
 
 interface UserBoxProps {
   user: User;
@@ -31,13 +31,13 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
       <div
         onClick={handleClick}
         className="
-          w-full 
-          relative 
-          flex 
-          items-center 
-          space-x-3 
-          bg-white 
-          p-3 
+          w-full
+          relative
+          flex
+          items-center
+          space-x-3
+          bg-white
+          p-3
           hover:bg-neutral-100
           rounded-lg
           transition

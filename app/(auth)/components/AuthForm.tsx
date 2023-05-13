@@ -6,9 +6,9 @@ import { BsGithub, BsGoogle } from "react-icons/bs";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
-import Input from "@/app/components/inputs/Input";
+import Input from "@/components/inputs/Input";
 import AuthSocialButton from "./AuthSocialButton";
-import Button from "@/app/components/Button";
+import Button from "@/components/Button";
 import { toast } from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
@@ -151,9 +151,9 @@ const AuthForm = () => {
           <div className="relative">
             <div
               className="
-                absolute 
-                inset-0 
-                flex 
+                absolute
+                inset-0
+                flex
                 items-center
               "
             >
@@ -179,12 +179,12 @@ const AuthForm = () => {
         </div>
         <div
           className="
-            flex 
-            gap-2 
-            justify-center 
-            text-sm 
-            mt-6 
-            px-2 
+            flex
+            gap-2
+            justify-center
+            text-sm
+            mt-6
+            px-2
             text-gray-500
           "
         >

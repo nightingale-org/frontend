@@ -5,9 +5,9 @@ import { Dialog } from "@headlessui/react";
 import { FiAlertTriangle } from "react-icons/fi";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Modal from "@/app/components/modals/Modal";
-import Button from "@/app/components/Button";
-import useConversation from "@/app/hooks/useConversation";
+import Modal from "@/components/modals/Modal";
+import Button from "@/components/Button";
+import useConversation from "@/hooks/useConversation";
 import { toast } from "react-hot-toast";
 
 interface ConfirmModalProps {
@@ -39,17 +39,17 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
       <div className="sm:flex sm:items-start">
         <div
           className="
-            mx-auto 
-            flex 
-            h-12 
-            w-12 
-            flex-shrink-0 
-            items-center 
-            justify-center 
-            rounded-full 
-            bg-red-100 
-            sm:mx-0 
-            sm:h-10 
+            mx-auto
+            flex
+            h-12
+            w-12
+            flex-shrink-0
+            items-center
+            justify-center
+            rounded-full
+            bg-red-100
+            sm:mx-0
+            sm:h-10
             sm:w-10
           "
         >
@@ -60,10 +60,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
         </div>
         <div
           className="
-            mt-3 
-            text-center 
-            sm:ml-4 
-            sm:mt-0 
+            mt-3
+            text-center
+            sm:ml-4
+            sm:mt-0
             sm:text-left
           "
         >

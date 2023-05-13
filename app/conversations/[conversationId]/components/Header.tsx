@@ -6,11 +6,11 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Conversation, User } from "@prisma/client";
 
-import useOtherUser from "@/app/hooks/useOtherUser";
-import useActiveList from "@/app/hooks/useActiveList";
+import useOtherUser from "@/hooks/useOtherUser";
+import useActiveList from "@/hooks/useActiveList";
 
-import Avatar from "@/app/components/Avatar";
-import AvatarGroup from "@/app/components/AvatarGroup";
+import Avatar from "@/components/Avatar";
+import AvatarGroup from "@/components/AvatarGroup";
 import ProfileDrawer from "./ProfileDrawer";
 
 interface HeaderProps {
@@ -42,16 +42,16 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
       />
       <div
         className="
-        bg-white 
-        w-full 
-        flex 
-        border-b-[1px] 
-        sm:px-4 
-        py-3 
-        px-4 
-        lg:px-6 
-        justify-between 
-        items-center 
+        bg-white
+        w-full
+        flex
+        border-b-[1px]
+        sm:px-4
+        py-3
+        px-4
+        lg:px-6
+        justify-between
+        items-center
         shadow-sm
       "
       >
@@ -59,11 +59,11 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           <Link
             href="/conversations"
             className="
-            lg:hidden 
-            block 
-            text-sky-500 
-            hover:text-sky-600 
-            transition 
+            lg:hidden
+            block
+            text-sky-500
+            hover:text-sky-600
+            transition
             cursor-pointer
           "
           >

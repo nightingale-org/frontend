@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
-import { MessageWithSenderAndSeen } from "@/app/@types";
+import { MessageWithSenderAndSeen } from "../../../../@types";
 
-import Avatar from "@/app/components/Avatar";
+import Avatar from "@/components/Avatar";
 import ImageModal from "./ImageModal";
 
 interface MessageBoxProps {
@@ -65,10 +65,10 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               onClick={() => setImageModalOpen(true)}
               src={messages.image}
               className="
-                object-cover 
-                cursor-pointer 
-                hover:scale-110 
-                transition 
+                object-cover
+                cursor-pointer
+                hover:scale-110
+                transition
                 translate
               "
             />
@@ -79,8 +79,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({
         {isLast && isOwn && seenList.length > 0 && (
           <div
             className="
-            text-xs 
-            font-light 
+            text-xs
+            font-light
             text-gray-500
             "
           >

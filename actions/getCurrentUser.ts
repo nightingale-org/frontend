@@ -1,4 +1,4 @@
-import prisma from "@/app/libs/prismadb";
+import prisma from "@/libs/prismadb";
 import { getServerSession } from "next-auth";
 import { User } from "@prisma/client";
 

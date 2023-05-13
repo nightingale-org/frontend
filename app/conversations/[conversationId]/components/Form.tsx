@@ -5,7 +5,7 @@ import MessageInput from "./MessageInput";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { CldUploadButton } from "next-cloudinary";
-import useConversation from "@/app/hooks/useConversation";
+import useConversation from "@/hooks/useConversation";
 
 const Form = () => {
   const { conversationId } = useConversation();
@@ -39,14 +39,14 @@ const Form = () => {
   return (
     <div
       className="
-        py-4 
-        px-4 
-        bg-white 
-        border-t 
-        flex 
-        items-center 
-        gap-2 
-        lg:gap-4 
+        py-4
+        px-4
+        bg-white
+        border-t
+        flex
+        items-center
+        gap-2
+        lg:gap-4
         w-full
       "
     >
@@ -71,11 +71,11 @@ const Form = () => {
         <button
           type="submit"
           className="
-            rounded-full 
-            p-2 
-            bg-sky-500 
-            cursor-pointer 
-            hover:bg-sky-600 
+            rounded-full
+            p-2
+            bg-sky-500
+            cursor-pointer
+            hover:bg-sky-600
             transition
           "
         >

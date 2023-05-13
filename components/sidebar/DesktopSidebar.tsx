@@ -1,7 +1,7 @@
 "use client";
 
 import DesktopItem from "./DesktopItem";
-import useRoutes from "@/app/hooks/useRoutes";
+import useRoutes from "@/hooks/useRoutes";
 import SettingsModal from "./SettingsModal";
 import { useState } from "react";
 import Avatar from "../Avatar";
@@ -24,15 +24,15 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
       />
       <div
         className="
-        hidden 
-        lg:fixed 
-        lg:inset-y-0 
-        lg:left-0 
-        lg:z-40 
-        lg:w-20 
+        hidden
+        lg:fixed
+        lg:inset-y-0
+        lg:left-0
+        lg:z-40
+        lg:w-20
         xl:px-6
-        lg:overflow-y-auto 
-        lg:bg-white 
+        lg:overflow-y-auto
+        lg:bg-white
         lg:border-r-[1px]
         lg:pb-4
         lg:flex
