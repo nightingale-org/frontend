@@ -7,9 +7,9 @@ import { MdOutlineGroupAdd } from 'react-icons/md';
 import clsx from 'clsx';
 
 import useConversation from '@/hooks/useConversation';
-import { pusherClient } from '@/libs/pusher';
+import { pusherClient } from "@/libs/pusher-client";
 import ConversationBox from './ConversationBox';
-import { ConversationWithUserAndMessages } from '../../../@types';
+import { ConversationWithUserAndMessages } from '../../../types';
 import dynamic from 'next/dynamic';
 
 const GroupChatModal = dynamic(() => import('@/components/modals/GroupChatModal'), { ssr: false });

@@ -1,13 +1,15 @@
-import { ApplicationError, ConflictError, NotFoundError, PreconditionFailedError } from './errors';
+import {ApplicationError, ConflictError, NotFoundError, PreconditionFailedError} from './errors';
+import {getServerSession} from "next-auth";
 
 const JSON_ContentType = 'application/json; charset=utf-8';
 
-const storage = sessionStorage;
+export async function getAccessToken(): Promise<string | null> {
+  const session = await getServerSession()
+  if (session && session.accessToken) {
+    return session.accessToken;
+  }
 
-export const ACCESS_TOKEN_KEY = 'ACCESS_TOKEN';
-
-export function getAccessToken(): string | null {
-  return storage.getItem(ACCESS_TOKEN_KEY);
+  return null;
 }
 
 export const CustomHeaders: { [key: string]: string } = {};
@@ -22,9 +24,9 @@ async function tryParseBodyAsJSON(response: Response): Promise<any> {
   return await response.text();
 }
 
-function getAuthorizationHeader(): { [key: string]: string } {
+async function getAuthorizationHeader(): Promise<{ [key: string]: string }> {
   return {
-    // Authorization: `Bearer ${getAccessToken()}`
+    Authorization: `Bearer ${await getAccessToken()}`
   };
 }
 
@@ -46,10 +48,10 @@ async function appFetch<T>(
   if (addAuth) {
     if (init === undefined) {
       init = {
-        headers: Object.assign({}, getAuthorizationHeader(), CustomHeaders)
+        headers: Object.assign({}, await getAuthorizationHeader(), CustomHeaders)
       };
     } else {
-      init.headers = Object.assign({}, init.headers, getAuthorizationHeader(), CustomHeaders);
+      init.headers = Object.assign({}, init.headers, await getAuthorizationHeader(), CustomHeaders);
     }
   }
 

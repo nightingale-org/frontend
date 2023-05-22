@@ -4,7 +4,7 @@ export class InterfaceError extends Error {}
 
 // Error for user's input value errors
 export class ValueError<T> extends Error {
-  private _invalidValue: T;
+  private readonly _invalidValue: T;
 
   public get value(): T {
     return this._invalidValue;

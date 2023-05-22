@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import getCurrentUser from '@/actions/getCurrentUser';
-import { pusherServer } from '@/libs/pusher';
+import { pusherServer } from '@/libs/pusher-server';
 import prisma from '@/libs/prismadb';
 
 interface IParams {
@@ -16,7 +16,6 @@ export async function POST(request: Request, { params }: { params: IParams }) {
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-
     // Find existing conversation
     const conversation = await prisma.conversation.findUnique({
       where: {

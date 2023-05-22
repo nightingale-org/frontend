@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
-import { useMemo, use } from 'react';
-import { ConversationWithUserAndMessages } from '@/@types';
+import { useMemo } from 'react';
+import { ConversationWithUserAndMessages } from '@/types';
 import { User } from '@prisma/client';
 
 const useOtherUser = (conversation: ConversationWithUserAndMessages | { users: User[] }) => {

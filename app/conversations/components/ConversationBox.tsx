@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import Avatar from '@/components/Avatar';
 import useOtherUser from '@/hooks/useOtherUser';
 import AvatarGroup from '@/components/AvatarGroup';
-import { ConversationWithUserAndMessages, MessageWithSeen } from '../../../@types';
+import { ConversationWithUserAndMessages, MessageWithSeen } from '../../../types';
 
 interface ConversationBoxProps {
   conversation: ConversationWithUserAndMessages;

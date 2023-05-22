@@ -5,6 +5,7 @@ import ReactSelect from 'react-select';
 interface SelectProps {
   label: string;
   value?: Record<string, any>;
+  // eslint-disable-next-line no-unused-vars
   onChange: (value: Record<string, any>) => void;
   options: Record<string, any>[];
   disabled?: boolean;
