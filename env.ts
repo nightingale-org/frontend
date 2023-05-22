@@ -11,6 +11,7 @@ export const env = createEnv({
     AUTH0_AUDIENCE: z.string(),
     DATABASE_URL: z.string().url(),
     NEXTAUTH_URL: z.string().url(),
+    USER_SERVICE_API_URL: z.string().url()
   },
   client: {
     NEXT_PUBLIC_PUSHER_APP_ID: z.string(),
@@ -29,5 +30,6 @@ export const env = createEnv({
     AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
     DATABASE_URL: process.env.DATABASE_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    USER_SERVICE_API_URL: process.env.USER_SERVICE_API_URL
   }
 })

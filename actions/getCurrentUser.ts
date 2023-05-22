@@ -1,6 +1,8 @@
-import prisma from '@/libs/prismadb';
 import { getServerSession } from 'next-auth';
 import { User } from '@prisma/client';
+import { get } from '@/libs/fetch-wrapper/fetch';
+import { env } from '@/env';
+
 
 const getCurrentUser = async (): Promise<User | null> => {
   try {
@@ -10,11 +12,7 @@ const getCurrentUser = async (): Promise<User | null> => {
       return null;
     }
 
-    return await prisma.user.findUnique({
-      where: {
-        email: session.user.email as string
-      }
-    });
+    return await get(`${env.USER_SERVICE_API_URL}/?email=${session.user.email}`)
   } catch (error: any) {
     return null;
   }
