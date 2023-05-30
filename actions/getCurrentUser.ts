@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
-import { User } from '@prisma/client';
 import { get } from '@/libs/fetch-wrapper/fetch';
 import { env } from '@/env';
+import type { User } from '@/types';
 
 
 const getCurrentUser = async (): Promise<User | null> => {

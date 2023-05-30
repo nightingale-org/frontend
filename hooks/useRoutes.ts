@@ -23,7 +23,9 @@ const useRoutes = () => {
     },
     {
       label: 'Logout',
-      onClick: () => signOut(),
+      onClick: () => signOut({
+        callbackUrl: "http://localhost:8080/api/auth/logout",
+      }),
       href: '#',
       icon: HiArrowLeftOnRectangle
     }

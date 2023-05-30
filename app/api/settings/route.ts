@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
 import getCurrentUser from '@/actions/getCurrentUser';
-import prisma from '@/libs/prismadb';
+import { patch } from '@/libs/fetch-wrapper/fetch';
+import { env } from '@/env';
 
 export async function POST(request: Request) {
   try {
@@ -13,17 +14,12 @@ export async function POST(request: Request) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: currentUser.id
-      },
-      data: {
-        image: image,
-        name: name
-      }
-    });
+    await patch(`${env.USER_SERVICE_API_URL}/${currentUser.id}/`, {
+      image,
+      name
+    })
 
-    return NextResponse.json(updatedUser);
+    return new NextResponse(null, {status: 204})
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES');
     return new NextResponse('Error', { status: 500 });

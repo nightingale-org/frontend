@@ -16,7 +16,7 @@ export const authOptions: AuthOptions = {
       idToken: true,
       authorization: {
         params: {
-          audience: encodeURI(env.AUTH0_AUDIENCE)
+          audience: encodeURI(env.AUTH0_AUDIENCE),
         }
       }
     })
@@ -38,8 +38,8 @@ export const authOptions: AuthOptions = {
       }
 
       return token;
-    }
+    },
   },
-  debug: false,
+  debug: process.env.NODE_ENV === "development",
   secret: env.NEXTAUTH_SECRET,
 };

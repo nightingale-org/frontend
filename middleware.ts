@@ -3,15 +3,11 @@
  * See [Edge Runtime](https://nextjs.org/docs/api-reference/edge-runtime)
  * for more information about Next.js middleware.
  */
-import type { NextMiddleware, NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import type { JWT } from "next-auth/jwt";
-import { getToken } from "next-auth/jwt";
-import type {
-  NextAuthMiddlewareOptions,
-  NextMiddlewareWithAuth,
-  WithAuthArgs,
-} from "next-auth/middleware";
+import type {NextMiddleware, NextRequest} from "next/server";
+import {NextResponse} from "next/server";
+import type {JWT} from "next-auth/jwt";
+import {getToken} from "next-auth/jwt";
+import type {NextAuthMiddlewareOptions, NextMiddlewareWithAuth, WithAuthArgs,} from "next-auth/middleware";
 
 /**
  * This hash function relies on Edge Runtime.
@@ -34,7 +30,7 @@ async function handleMiddleware(
   options: AuthMiddlewareOptions | undefined = {},
   onSuccess?: (token: JWT | null) => ReturnType<NextMiddleware>
 ) {
-  const { origin, basePath } = req.nextUrl;
+  const {origin, basePath} = req.nextUrl;
   const errorPage = options?.pages?.error ?? "/api/auth/error";
 
   options.trustHost ??= !!(
@@ -69,7 +65,7 @@ async function handleMiddleware(
   });
 
   const isAuthorized =
-    (await options?.callbacks?.authorized?.({ req, token })) ?? !!token;
+    (await options?.callbacks?.authorized?.({req, token})) ?? !!token;
 
   // the user is authorized, let the middleware handle the rest
   if (isAuthorized) return onSuccess?.(token);
@@ -81,21 +77,28 @@ async function handleMiddleware(
     cookieCsrfToken?.split("|")?.[1] ??
     (await hash(`${csrfToken}${options.secret}`));
   const cookie = `${csrfToken}|${csrfTokenHash}`;
-  const res = await fetch(`${host}/api/auth/signin/auth0`, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
-      cookie: `next-auth.csrf-token=${cookie}`,
-    },
-    credentials: "include",
-    redirect: "follow",
-    body: new URLSearchParams({
-      csrfToken,
-      callbackUrl: req.url,
-      json: "true",
-    }),
-  });
+  let res
+
+  try {
+    res = await fetch(`${host}/api/auth/signin/auth0`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Auth-Return-Redirect": "1",
+        cookie: `next-auth.csrf-token=${cookie}`,
+      },
+      credentials: "include",
+      redirect: "follow",
+      body: new URLSearchParams({
+        csrfToken,
+        callbackUrl: req.url,
+        json: "true",
+      }),
+    });
+  } catch (e) {
+    console.log(e);
+    throw e
+  }
   const data = (await res.json()) as { url: string };
 
   return NextResponse.redirect(data.url, {
@@ -115,7 +118,7 @@ export function withAuth(...args: WithAuthArgs) {
     const options = args[1] as NextAuthMiddlewareOptions | undefined;
     return async (...args: Parameters<NextMiddlewareWithAuth>) =>
       await handleMiddleware(args[0], options, async (token: JWT | null) => {
-        args[0].nextauth = { token };
+        args[0].nextauth = {token};
         return await middleware(...args);
       });
   }

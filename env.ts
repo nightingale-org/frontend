@@ -1,5 +1,5 @@
 import {createEnv} from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import {z} from "zod";
 
 export const env = createEnv({
   server: {
@@ -11,7 +11,9 @@ export const env = createEnv({
     AUTH0_AUDIENCE: z.string(),
     DATABASE_URL: z.string().url(),
     NEXTAUTH_URL: z.string().url(),
-    USER_SERVICE_API_URL: z.string().url()
+    USER_SERVICE_API_URL: z.string().url(),
+    AUTH0_API_CLIENT_ID: z.string(),
+    AUTH0_API_CLIENT_SECRET: z.string(),
   },
   client: {
     NEXT_PUBLIC_PUSHER_APP_ID: z.string(),
@@ -30,6 +32,8 @@ export const env = createEnv({
     AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
     DATABASE_URL: process.env.DATABASE_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    USER_SERVICE_API_URL: process.env.USER_SERVICE_API_URL
+    USER_SERVICE_API_URL: process.env.USER_SERVICE_API_URL,
+    AUTH0_API_CLIENT_ID: process.env.AUTH0_API_CLIENT_ID,
+    AUTH0_API_CLIENT_SECRET: process.env.AUTH0_API_CLIENT_SECRET
   }
 })

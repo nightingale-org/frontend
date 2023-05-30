@@ -4,7 +4,6 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { User } from '@prisma/client';
 import { CldUploadButton } from 'next-cloudinary';
 
 import Input from '../inputs/Input';
@@ -12,6 +11,7 @@ import Modal from '../modals/Modal';
 import Button from '../Button';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
+import { User } from '@/types';
 
 interface SettingsModalProps {
   isOpen?: boolean;
@@ -19,7 +19,7 @@ interface SettingsModalProps {
   currentUser: User;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser = {} }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,8 +31,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
     formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
-      name: currentUser?.name,
-      image: currentUser?.image
+      name: currentUser.name,
+      image: currentUser.image
     }
   });
 

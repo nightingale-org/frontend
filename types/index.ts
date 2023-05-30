@@ -12,3 +12,12 @@ export type MessageWithSenderAndSeen = Prisma.MessageGetPayload<{
 export type ConversationWithUserAndMessages = Prisma.ConversationGetPayload<{
   include: { users: true; messages: true };
 }>;
+
+export type User = {
+  id: string
+  name: string | null
+  email: string | null
+  emailVerified: Date | null
+  image: string | null
+  createdAt: Date | null
+}

@@ -1,15 +1,22 @@
 import {ApplicationError, ConflictError, NotFoundError, PreconditionFailedError} from './errors';
-import {getServerSession} from "next-auth";
+import {env} from "@/env";
 
 const JSON_ContentType = 'application/json; charset=utf-8';
 
-export async function getAccessToken(): Promise<string | null> {
-  const session = await getServerSession()
-  if (session && session.accessToken) {
-    return session.accessToken;
-  }
+export async function getAccessToken(): Promise<string> {
+  const response = await fetch(`${env.AUTH0_DOMAIN}/oauth/token`, {
+    method: 'POST',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: env.AUTH0_API_CLIENT_ID,
+      client_secret: env.AUTH0_API_CLIENT_SECRET,
+      audience: env.AUTH0_AUDIENCE
+    })
+  })
 
-  return null;
+  const jsonResponse = await response.json();
+  return jsonResponse["access_token"] as string;
 }
 
 export const CustomHeaders: { [key: string]: string } = {};
