@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pusherClient } from "@/libs/pusher-client";
 import useConversation from '@/hooks/useConversation';
 import MessageBox from './MessageBox';
-import type { MessageWithSenderAndSeen } from '@/types';
+import type { MessageWithSenderAndSeen } from '../../../../@types';
 
 interface BodyProps {
   initialMessages: MessageWithSenderAndSeen[];

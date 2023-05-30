@@ -10,7 +10,7 @@ import Select from '../inputs/Select';
 import Modal from './Modal';
 import Button from '../Button';
 import { toast } from 'react-hot-toast';
-import {User} from "@/types";
+import {User} from "@/@types";
 
 interface GroupChatModalProps {
   isOpen?: boolean;
@@ -85,7 +85,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, users 
                 label="Members"
                 options={users.map((user) => ({
                   value: user.id,
-                  label: user.name
+                  label: user.username
                 }))}
                 onChange={(value) =>
                   setValue('members', value, {

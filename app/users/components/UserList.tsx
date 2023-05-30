@@ -1,7 +1,7 @@
 'use client';
 
 import UserBox from './UserBox';
-import {User} from "@/types";
+import {User} from "../../../@types";
 
 interface UserListProps {
   users: User[];

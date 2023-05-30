@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import useConversation from '@/hooks/useConversation';
 import { pusherClient } from "@/libs/pusher-client";
 import ConversationBox from './ConversationBox';
-import {ConversationWithUserAndMessages, User} from '@/types';
+import {ConversationWithUserAndMessages, User} from '../../../@types';
 import dynamic from 'next/dynamic';
 
 const GroupChatModal = dynamic(() => import('@/components/modals/GroupChatModal'), { ssr: false });

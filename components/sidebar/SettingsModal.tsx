@@ -1,17 +1,20 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { CldUploadButton } from 'next-cloudinary';
+import React, {useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {FieldValues, SubmitHandler, useForm} from 'react-hook-form';
+import {CldUploadButton} from 'next-cloudinary';
 
 import Input from '../inputs/Input';
 import Modal from '../modals/Modal';
 import Button from '../Button';
 import Image from 'next/image';
-import { toast } from 'react-hot-toast';
-import { User } from '@/types';
+import {toast} from 'react-hot-toast';
+import type {ExistsResponse, User} from '@/@types';
+import {get} from "@/libs/fetch-wrapper/fetch";
+import {useSession} from "next-auth/react";
+import debouncePromise from 'awesome-debounce-promise';
 
 interface SettingsModalProps {
   isOpen?: boolean;
@@ -19,7 +22,7 @@ interface SettingsModalProps {
   currentUser: User;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({isOpen, onClose, currentUser}) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,13 +31,24 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
     handleSubmit,
     setValue,
     watch,
-    formState: { errors }
+    formState: {errors}
   } = useForm<FieldValues>({
     defaultValues: {
-      name: currentUser.name,
+      username: currentUser.username,
       image: currentUser.image
-    }
+    },
+    mode: "onChange"
   });
+
+  const session = useSession()
+  const validateUsernameIsAvailable = debouncePromise(async (value: string): Promise<boolean> => {
+    const resp = await get<ExistsResponse>(`http://localhost:8000/api/v1/users/availability/${value}`, {
+      Authorization: `Bearer ${session.data?.accessToken}`
+    })
+
+    return !resp.exists;
+  }, 300)
+
 
   const image = watch('image');
 
@@ -64,9 +78,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
           <div className="border-b border-gray-900/10 pb-12">
             <h2
               className="
-                text-base 
-                font-semibold 
-                leading-7 
+                text-base
+                font-semibold
+                leading-7
                 text-gray-900
               "
             >
@@ -77,20 +91,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
             <div className="mt-10 flex flex-col gap-y-8">
               <Input
                 disabled={isLoading}
-                label="Name"
-                id="name"
-                errors={errors}
+                label="Username"
+                id="username"
                 required
+                errors={errors}
                 register={register}
+                options={{
+                  pattern: /^(?!.*\s)[a-z0-9_]+$/i,
+                  minLength: 5,
+                  validate: validateUsernameIsAvailable,
+                }}
               />
               <div>
                 <label
                   htmlFor="photo"
                   className="
-                    block 
-                    text-sm 
-                    font-medium 
-                    leading-6 
+                    block
+                    text-sm
+                    font-medium
+                    leading-6
                     text-gray-900
                   "
                 >
@@ -105,7 +124,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
                     alt="Avatar"
                   />
                   <CldUploadButton
-                    options={{ maxFiles: 1 }}
+                    options={{maxFiles: 1}}
                     onUpload={handleUpload}
                     uploadPreset="pgc9ehd5"
                   >
@@ -121,10 +140,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
 
         <div
           className="
-            mt-6 
-            flex 
-            items-center 
-            justify-end 
+            mt-6
+            flex
+            items-center
+            justify-end
             gap-x-6
           "
         >

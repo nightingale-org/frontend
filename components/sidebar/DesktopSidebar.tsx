@@ -3,12 +3,13 @@
 import DesktopItem from './DesktopItem';
 import useRoutes from '@/hooks/useRoutes';
 import SettingsModal from './SettingsModal';
-import { useState } from 'react';
+import {useState} from 'react';
 import Avatar from '../Avatar';
-import {User} from "@/types";
+import {User} from "../../@types";
 
 interface DesktopSidebarProps {
   currentUser: User;
+
 }
 
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {

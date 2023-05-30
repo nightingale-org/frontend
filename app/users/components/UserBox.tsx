@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import Avatar from '@/components/Avatar';
 import LoadingModal from '@/components/modals/LoadingModal';
-import {User} from "@/types";
+import {User} from "../../../@types";
 
 interface UserBoxProps {
   user: User;
@@ -49,7 +49,7 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
           <div className="focus:outline-none">
             <span className="absolute inset-0" aria-hidden="true" />
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">{user.name}</p>
+              <p className="text-sm font-medium text-gray-900">{user.username}</p>
             </div>
           </div>
         </div>

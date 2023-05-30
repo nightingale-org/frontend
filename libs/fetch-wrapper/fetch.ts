@@ -1,18 +1,17 @@
 import {ApplicationError, ConflictError, NotFoundError, PreconditionFailedError} from './errors';
 import {env} from "@/env";
 import {getServerSession} from "next-auth";
-import {authOptions} from "@/libs/auth/options";
 
 const JSON_ContentType = 'application/json; charset=utf-8';
 
 export async function getAccessToken(): Promise<string> {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession((await import("@/libs/auth/options")).authOptions);
 
   if (session?.accessToken) {
     return session.accessToken;
   }
 
-  const response = await fetch(`${env.AUTH0_DOMAIN}/oauth/token`, {
+  const response = await fetch(`${env.AUTH0_DOMAIN}/oauth/token/`, {
     method: 'POST',
     headers: {'content-type': 'application/x-www-form-urlencoded'},
     body: new URLSearchParams({
@@ -66,7 +65,18 @@ async function appFetch<T>(
         headers: Object.assign({}, await getAuthorizationHeader(), CustomHeaders)
       };
     } else {
-      init.headers = Object.assign({}, init.headers, await getAuthorizationHeader(), CustomHeaders);
+      let headers = Object.assign({}, init.headers, CustomHeaders);
+
+      const hasAuthorizationHeader = init.headers ? init.headers["Authorization"] : false
+
+      if (!hasAuthorizationHeader) {
+        headers = {...headers, ...await getAuthorizationHeader()}
+      }
+
+      init = {
+        ...init,
+        headers: headers,
+      }
     }
   }
 

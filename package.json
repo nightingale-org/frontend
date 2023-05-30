@@ -28,6 +28,7 @@
     "@prisma/client": "^4.14.0",
     "@t3-oss/env-nextjs": "^0.3.1",
     "autoprefixer": "10.4.14",
+    "awesome-debounce-promise": "^2.1.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "clsx": "^1.2.1",

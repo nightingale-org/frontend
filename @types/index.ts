@@ -15,9 +15,13 @@ export type ConversationWithUserAndMessages = Prisma.ConversationGetPayload<{
 
 export type User = {
   id: string
-  name: string | null
+  username: string | null
   email: string | null
   emailVerified: Date | null
   image: string | null
   createdAt: Date | null
+}
+
+export type ExistsResponse = {
+  exists: boolean;
 }

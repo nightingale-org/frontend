@@ -1,6 +1,6 @@
 import {getServerSession} from 'next-auth';
 import {get} from "@/libs/fetch-wrapper/fetch";
-import {User} from "@/types";
+import {User} from "../@types";
 
 const getUsers = async (): Promise<User[]> => {
   const session = await getServerSession();

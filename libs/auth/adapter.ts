@@ -16,7 +16,9 @@ const getOrNull = async <T extends unknown = {}>(...args: Parameters<typeof get>
 export default function RestAPIAdapter(): Adapter {
   return {
     async createUser(user) {
-      return await post('http://localhost:8000/api/v1/users/', user, {
+      const {name: username, ...rest} = user
+      const userPayload = {username, ...rest}
+      return await post('http://localhost:8000/api/v1/users/', userPayload, {
         'Content-Type': 'application/json'
       })
     },
@@ -30,7 +32,9 @@ export default function RestAPIAdapter(): Adapter {
       return await getOrNull<AdapterUser>(`http://localhost:8000/api/v1/users/?provider_account_id=${providerAccountId}`)
     },
     async updateUser(user) {
-      return await patch('http://localhost:8000/api/v1/users/', user)
+      const {name: username, ...rest} = user
+      const userPayload = {username, ...rest}
+      return await patch('http://localhost:8000/api/v1/users/', userPayload)
     },
     async deleteUser(userId: string): Promise<void> {
       await del(`http://localhost:8000/api/v1/users/${userId}/`)
@@ -44,13 +48,14 @@ export default function RestAPIAdapter(): Adapter {
 
     async createSession() {
       return {} as AdapterSession
-     },
+    },
     async getSessionAndUser() {
       return null
     },
     async updateSession() {
       return null
     },
-    async deleteSession() { }
+    async deleteSession() {
+    }
   }
 }

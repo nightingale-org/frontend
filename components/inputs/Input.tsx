@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import type {FieldErrors, FieldValues, RegisterOptions, UseFormRegister} from 'react-hook-form';
 
 interface InputProps {
   label: string;
@@ -11,6 +11,7 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   disabled?: boolean;
+  options?: RegisterOptions;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -20,17 +21,18 @@ const Input: React.FC<InputProps> = ({
   required,
   errors,
   type = 'text',
-  disabled
+  disabled,
+  options
 }) => {
   return (
     <div>
       <label
         htmlFor={id}
         className="
-          block 
-          text-sm 
-          font-medium 
-          leading-6 
+          block
+          text-sm
+          font-medium
+          leading-6
           text-gray-900
         "
       >
@@ -42,28 +44,32 @@ const Input: React.FC<InputProps> = ({
           type={type}
           autoComplete={id}
           disabled={disabled}
-          {...register(id, { required })}
+          {...register(id, { required, ...options })}
           className={clsx(
             `
             form-input
-            block 
-            w-full 
-            rounded-md 
-            border-0 
-            py-1.5 
-            text-gray-900 
-            shadow-sm 
-            ring-1 
-            ring-inset 
-            ring-gray-300 
-            placeholder:text-gray-400 
-            focus:ring-2 
-            focus:ring-inset 
-            focus:ring-sky-600 
-            sm:text-sm 
+            block
+            w-full
+            rounded-md
+            border-0
+            py-1.5
+            text-gray-900
+            shadow-sm
+            ring-1
+            ring-inset
+            ring-gray-300
+            placeholder:text-gray-400
+            focus:ring-2
+            focus:ring-inset
+            sm:text-sm
             sm:leading-6`,
-            errors[id] && 'focus:ring-rose-500',
-            disabled && 'cursor-default opacity-50'
+            {
+              'focus:ring-rose-500': errors[id],
+              'ring-rose-500': errors[id],
+              'ring-gray-300': !errors[id],
+              'focus:ring-sky-600': !errors[id],
+              'cursor-default opacity-50': disabled,
+            },
           )}
         />
       </div>
