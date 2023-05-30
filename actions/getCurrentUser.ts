@@ -11,7 +11,6 @@ const getCurrentUser = async (): Promise<User | null> => {
     if (!session?.user?.email) {
       return null;
     }
-
     return await get(`${env.USER_SERVICE_API_URL}/?email=${session.user.email}`)
   } catch (error: any) {
     return null;

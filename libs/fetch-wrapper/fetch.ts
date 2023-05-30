@@ -1,9 +1,17 @@
 import {ApplicationError, ConflictError, NotFoundError, PreconditionFailedError} from './errors';
 import {env} from "@/env";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/libs/auth/options";
 
 const JSON_ContentType = 'application/json; charset=utf-8';
 
 export async function getAccessToken(): Promise<string> {
+  const session = await getServerSession(authOptions);
+
+  if (session?.accessToken) {
+    return session.accessToken;
+  }
+
   const response = await fetch(`${env.AUTH0_DOMAIN}/oauth/token`, {
     method: 'POST',
     headers: {'content-type': 'application/x-www-form-urlencoded'},

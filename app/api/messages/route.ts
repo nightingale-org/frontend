@@ -14,7 +14,6 @@ export async function POST(request: Request) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    console.time('start touching db');
     const newMessage = await prisma.message.create({
       include: {
         seen: true,
@@ -58,7 +57,6 @@ export async function POST(request: Request) {
         }
       }
     });
-    console.timeEnd('start touching db');
 
     await pusherServer.trigger(conversationId, 'messages:new', newMessage);
 

@@ -18,17 +18,15 @@ export const authOptions: AuthOptions = {
         params: {
           audience: encodeURI(env.AUTH0_AUDIENCE),
         }
-      }
+      },
     })
   ],
   session: {
     strategy: "jwt"
   },
   callbacks: {
-    session: async ({session, token}) => {
-      if (token) {
-        session.accessToken = token.accessToken as string;
-      }
+    async session({session, token}) {
+      session.accessToken = token.accessToken as string;
       return session;
     },
     async jwt({token, account}) {

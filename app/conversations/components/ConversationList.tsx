@@ -1,6 +1,5 @@
 'use client';
 
-import { User } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { MdOutlineGroupAdd } from 'react-icons/md';
@@ -9,7 +8,7 @@ import clsx from 'clsx';
 import useConversation from '@/hooks/useConversation';
 import { pusherClient } from "@/libs/pusher-client";
 import ConversationBox from './ConversationBox';
-import { ConversationWithUserAndMessages } from '../../../types';
+import {ConversationWithUserAndMessages, User} from '@/types';
 import dynamic from 'next/dynamic';
 
 const GroupChatModal = dynamic(() => import('@/components/modals/GroupChatModal'), { ssr: false });
