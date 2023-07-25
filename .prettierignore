@@ -1,3 +1,26 @@
-.vercel
-.next
+# Compiled & generated output
+/*/dist/
+
+# Cache
+/.cache
+
+# Yarn
+/.yarn
+/.pnp.*
+
+# TypeScript
+/tsconfig.base.json
+
+# Misc
+/.husky
+*.hbs
+/.eslintcache
+
 pnpm-lock.yaml
+
+src/dist/*
+
+dist
+node_modules
+.next
+build
