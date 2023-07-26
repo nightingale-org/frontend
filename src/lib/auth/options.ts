@@ -28,7 +28,7 @@ export const authOptions: AuthOptions = {
       session.accessToken = token.accessToken as string;
 
       if (session.user) {
-        const currentUser = await getCurrentUser(session.accessToken);
+        const currentUser = await getCurrentUser({ accessToken: session.accessToken });
         session.user.name = currentUser.username;
         session.user.image = currentUser.image;
         session.user.id = currentUser.id;
@@ -46,6 +46,6 @@ export const authOptions: AuthOptions = {
       return token;
     }
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: false, // process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET
 };

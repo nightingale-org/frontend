@@ -11,11 +11,14 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import type { DehydratedProps } from '@/@types';
 import { queryKeys } from '@/lib/api/query-keys';
 import { useGetRelationships } from '@/hooks/queries/use-get-relationships';
+import { RelationshipType } from '@/lib/api/schemas';
 
 export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ctx) => {
   const queryClient = new QueryClient();
-  console.log(ctx)
-  await queryClient.prefetchQuery(queryKeys.relationshipsList(), () => getRelationships({ctx}));
+
+  await queryClient.prefetchQuery(queryKeys.relationshipsList(RelationshipType.established), () =>
+    getRelationships({ ctx, type: RelationshipType.established })
+  );
 
   return {
     props: {
@@ -27,7 +30,7 @@ export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ct
 export default function RelationShip() {
   const [isAddFriendModalOpened, setIsAddFriendModalOpened] = useState(false);
 
-  const { data: relationships } = useGetRelationships()
+  const { data: relationships } = useGetRelationships(RelationshipType.established);
 
   const onAddFriendModalOpen = () => {
     setIsAddFriendModalOpened(true);
@@ -87,19 +90,19 @@ export default function RelationShip() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="all">
-            <RelationShipList relationships={[]} />
+            <RelationShipList relationships={relationships} />
           </TabsContent>
           <TabsContent value="pending">
-            <RelationShipList relationships={[]} />
+            <RelationShipList />
           </TabsContent>
           <TabsContent value="blocked">
-            <RelationShipList relationships={[]} />
+            <RelationShipList />
           </TabsContent>
           <TabsContent value="add_friend">
             <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />
           </TabsContent>
         </Tabs>
-        {[].map((relationship) => (
+        {relationships.map((relationship) => (
           <UserBox key={relationship.with_user.id} user={relationship.with_user} />
         ))}
       </div>
