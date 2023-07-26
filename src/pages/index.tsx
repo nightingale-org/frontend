@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Conversation, RelationShip } from '@/lib/api/schemas';
+import { type Conversation, type RelationShip, RelationshipType } from '@/lib/api/schemas';
 import { getConversations, getRelationships } from '@/lib/api/query-functions';
 import { Layout } from '@/layouts';
 import ConversationList from '@/components/ConversationList';
@@ -29,8 +29,8 @@ Home.auth = {
 
 export const getServerSideProps: GetServerSideProps<ConversationLayoutProps> = async (context) => {
   const [conversations, relationships] = await Promise.all([
-    getConversations({ctx: context}),
-    getRelationships({ctx: context})
+    getConversations({ ctx: context }),
+    getRelationships({ ctx: context, type: RelationshipType.established })
   ]);
 
   return {

@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 const JSON_ContentType = 'application/json; charset=utf-8';
 
-export type AuthorizationData = (
+export type AuthorizationData =
   | {
       ctx: CtxOrReq;
       accessToken?: never;
@@ -17,12 +17,13 @@ export type AuthorizationData = (
   | {
       ctx?: never;
       accessToken?: never;
-    }
-);
+    };
+
+type InferredZodeTypeOrCustom<T> = T extends z.ZodTypeAny ? z.infer<T> : T;
 
 export type FetchInputBase<T> = {
   validationModel?: T extends z.ZodTypeAny ? T : z.ZodTypeAny;
-} & AuthorizationData
+} & AuthorizationData;
 
 export type AppFetchInput<T> = {
   input: RequestInfo;
@@ -226,13 +227,13 @@ async function appFetch<T>({
   init,
   accessToken,
   validationModel
-}: AppFetchInput<T>): Promise<T extends z.ZodTypeAny ? z.infer<T> : T> {
+}: AppFetchInput<T>): Promise<InferredZodeTypeOrCustom<T>> {
   if (init === undefined) {
     if (typeof accessToken === 'string') {
       init = {
-        headers: Object.assign({}, { "Authorization": `Bearer ${accessToken}` }, CustomHeaders)
+        headers: Object.assign({}, { Authorization: `Bearer ${accessToken}` }, CustomHeaders)
       };
-    } else if (ctx) {
+    } else {
       init = {
         headers: Object.assign({}, await getAuthorizationHeader(ctx), CustomHeaders)
       };
@@ -242,9 +243,9 @@ async function appFetch<T>({
     const authorizationHeader = headers['Authorization'];
 
     if (!authorizationHeader) {
-      if (typeof accessToken === 'string') { 
-        headers = {...headers, "Authorization": `Bearer ${accessToken}`} as Record<string, string>
-      } else if (ctx) {
+      if (typeof accessToken === 'string') {
+        headers = { ...headers, Authorization: `Bearer ${accessToken}` } as Record<string, string>;
+      } else {
         headers = { ...headers, ...(await getAuthorizationHeader(ctx)) };
       }
     }
@@ -267,8 +268,6 @@ async function appFetch<T>({
 
   const response = await fetch(input, init);
 
-  let data = await tryParseBodyAsJSON(response);
-
   if (response.status === 404) {
     throw new NotFoundError();
   }
@@ -280,6 +279,8 @@ async function appFetch<T>({
   if (response.status === 412) {
     throw new PreconditionFailedError();
   }
+
+  let data = await tryParseBodyAsJSON(response);
 
   if (response.status >= 400) {
     throw new ApplicationError('Response status does not indicate success', response.status, data);
@@ -296,7 +297,7 @@ async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: 
   const session = await getSession(ctx);
 
   if (session?.accessToken) {
-    return session.accessToken;
+    return { Authorization: `Bearer ${session.accessToken}` };
   }
 
   const response = await fetch(`${process.env.AUTH0_DOMAIN}/oauth/token/`, {
@@ -317,8 +318,6 @@ async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: 
     Authorization: `Bearer ${accessToken}`
   };
 }
-
-
 
 async function tryParseBodyAsJSON(response: Response): Promise<any> {
   const contentType = response.headers.get('content-type');

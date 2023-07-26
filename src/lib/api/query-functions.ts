@@ -5,6 +5,7 @@ import {
   ConversationSchema,
   ExistsResponseSchema,
   RelationShipSchema,
+  RelationshipType,
   UserSchema
 } from '@/lib/api/schemas';
 
@@ -28,9 +29,17 @@ export async function getConversations({ ctx, accessToken }: AuthorizationData) 
   });
 }
 
-export async function getRelationships({ ctx, accessToken }: AuthorizationData) {
+export async function getRelationships({
+  ctx,
+  accessToken,
+  type = RelationshipType.established
+}: AuthorizationData & { type?: RelationshipType }) {
+  const searchParams = new URLSearchParams({
+    type: type.toString()
+  });
+
   return await get({
-    url: `/relationships`,
+    url: `/relationships?${searchParams}`,
     validationModel: z.array(RelationShipSchema),
     // TODO: fix types
     ctx: ctx as any,

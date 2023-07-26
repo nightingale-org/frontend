@@ -1,5 +1,7 @@
+import type { RelationshipType } from '@/lib/api/schemas';
+
 export const queryKeys = {
-  relationshipsList: () => {
-    return ['relationshipsList'];
+  relationshipsList: (type: RelationshipType) => {
+    return ['relationshipsList', type];
   }
 };

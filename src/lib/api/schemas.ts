@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-enum RelationshipType {
+export enum RelationshipType {
   ingoing_request = 0,
   outgoing_request,
   blocked,
