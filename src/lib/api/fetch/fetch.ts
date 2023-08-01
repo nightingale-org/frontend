@@ -44,7 +44,7 @@ export async function get<T>({
   validationModel,
   accessToken
 }: FetchInputMethod<T>) {
-  return await appFetch<T>({
+  return await makeRequest<T>({
     input: url,
     validationModel,
     init: {
@@ -64,7 +64,7 @@ export async function getOptional<T>({
   accessToken
 }: FetchInputMethod<T>) {
   try {
-    return await appFetch<T>({
+    return await makeRequest<T>({
       input: url,
       validationModel,
       init: {
@@ -92,7 +92,7 @@ export async function post<T>({
   data = null
 }: FetchInputMethod<T> & { data?: any }) {
   if (!data) {
-    return await appFetch<T>({
+    return await makeRequest<T>({
       input: url,
       validationModel,
       init: {
@@ -104,12 +104,12 @@ export async function post<T>({
   }
 
   if (!(data instanceof FormData)) {
-    return await appFetch<T>({
+    return await makeRequest<T>({
       input: url,
       validationModel,
       init: {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: data,
         headers: headers || {
           'Content-Type': JSON_ContentType
         }
@@ -119,7 +119,7 @@ export async function post<T>({
     } as AppFetchInput<T>);
   }
 
-  return await appFetch<T>({
+  return await makeRequest<T>({
     input: url,
     validationModel,
     init: {
@@ -140,12 +140,12 @@ export async function patch<T>({
   accessToken,
   data = null
 }: FetchInputMethod<T> & { data?: any }) {
-  return await appFetch<T>({
+  return await makeRequest<T>({
     input: url,
     validationModel,
     init: {
       method: 'PATCH',
-      body: JSON.stringify(data),
+      body: data,
       headers: headers || {
         'Content-Type': JSON_ContentType
       }
@@ -163,12 +163,12 @@ export async function put<T>({
   accessToken,
   data
 }: FetchInputMethod<T> & { data: any }) {
-  return await appFetch<T>({
+  return await makeRequest<T>({
     input: url,
     validationModel,
     init: {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: data,
       headers: headers || {
         'Content-Type': JSON_ContentType
       }
@@ -187,7 +187,7 @@ export async function del<T>({
   data = null
 }: FetchInputMethod<T> & { data?: any }) {
   if (!data) {
-    return await appFetch<T>({
+    return await makeRequest<T>({
       input: url,
       validationModel,
       init: {
@@ -198,12 +198,12 @@ export async function del<T>({
     } as AppFetchInput<T>);
   }
 
-  return await appFetch<T>({
+  return await makeRequest<T>({
     input: url,
     validationModel,
     init: {
       method: 'DELETE',
-      body: JSON.stringify(data),
+      body: data,
       headers: headers || {
         'Content-Type': JSON_ContentType
       }
@@ -221,7 +221,7 @@ export async function del<T>({
  * tokens silently. If that succeeds, the application flow continues
  * transparently, by repeating the original web request with a new token.
  */
-async function appFetch<T>({
+async function makeRequest<T>({
   ctx,
   input,
   init,
@@ -256,7 +256,11 @@ async function appFetch<T>({
     };
   }
 
-  if (typeof input === 'string') {
+  if (isBodyShouldBeStringified(init)) {
+    init.body = JSON.stringify(init.body);
+  }
+
+  if (shouldPrependBaseUrl(input)) {
     if (!input.startsWith(process.env.NEXT_PUBLIC_BACKEND_API_URL)) {
       if (process.env.NEXT_PUBLIC_BACKEND_API_URL.at(-1) === '/' && input.startsWith('/')) {
         input = input.slice(1);
@@ -266,7 +270,16 @@ async function appFetch<T>({
     }
   }
 
-  const response = await fetch(input, init);
+  let response: Response | null;
+  try {
+    response = await fetch(input, init);
+  } catch (error) {
+    throw new ApplicationError('Network error', 0, error);
+  }
+
+  if (response.status === 401) {
+    // TODO: handle unauthorized errors(401 UNAUTHORIZED and 403 FORBIDDEN)
+  }
 
   if (response.status === 404) {
     throw new NotFoundError();
@@ -280,7 +293,7 @@ async function appFetch<T>({
     throw new PreconditionFailedError();
   }
 
-  let data = await tryParseBodyAsJSON(response);
+  let data = await parseResponseBody(response);
 
   if (response.status >= 400) {
     throw new ApplicationError('Response status does not indicate success', response.status, data);
@@ -302,7 +315,7 @@ async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: 
 
   const response = await fetch(`${process.env.AUTH0_DOMAIN}/oauth/token/`, {
     method: 'POST',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       grant_type: 'client_credentials',
       client_id: process.env.AUTH0_API_CLIENT_ID,
@@ -319,8 +332,14 @@ async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: 
   };
 }
 
-async function tryParseBodyAsJSON(response: Response): Promise<any> {
-  const contentType = response.headers.get('content-type');
+const isBodyShouldBeStringified = (init: RequestInit): boolean =>
+  init.headers?.['Content-Type'].indexOf('json') > -1 && typeof init.body === 'object';
+
+const shouldPrependBaseUrl = (input: RequestInfo): input is string =>
+  typeof input === 'string' && !input.startsWith(process.env.NEXT_PUBLIC_BACKEND_API_URL);
+
+async function parseResponseBody(response: Response): Promise<any> {
+  const contentType = response.headers.get('Content-Type');
 
   if (contentType !== null && contentType.indexOf('json') > -1) {
     return await response.json();
