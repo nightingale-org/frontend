@@ -11,6 +11,10 @@ import type { DehydratedProps } from '@/@types';
 import { queryKeys } from '@/lib/api/query-keys';
 import { useGetRelationships } from '@/hooks/queries/use-get-relationships';
 import { RelationshipType } from '@/lib/api/schemas';
+import { MdPersonAddAlt } from 'react-icons/md';
+import { Icon } from '@/components/ui/icon';
+import { createPortal } from 'react-dom';
+import AddFriendModal from '@/components/AddFriendModal';
 
 export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ctx) => {
   const queryClient = new QueryClient();
@@ -32,6 +36,7 @@ export default function RelationShip() {
   const { data: relationships } = useGetRelationships(RelationshipType.established);
 
   const onAddFriendModalOpen = () => {
+    console.log('add friend model has been opened');
     setIsAddFriendModalOpened(true);
   };
 
@@ -40,32 +45,13 @@ export default function RelationShip() {
   };
 
   return (
-    <aside
-      className="fixed inset-y-0
-        left-0
-        block
-        w-full
-        overflow-y-auto
-        border-r
-        border-gray-200
-        pb-20
-        lg:left-20
-        lg:block lg:w-80 lg:pb-0
-      "
-    >
+    <aside className="fixed inset-y-0 left-0 block w-full overflow-y-auto border-r border-gray-200 pb-20 lg:left-20 lg:block lg:w-80 lg:pb-0">
       <div>
-        <div className="flex-col">
-          <div
-            className="
-              py-4
-              pl-4
-              text-2xl
-              font-bold
-              text-neutral-800
-            "
-          >
-            Friends
-          </div>
+        <div className="flex items-center justify-between">
+          <div className="py-4 pl-4 text-2xl font-bold text-neutral-800">Friends</div>
+          <Icon onClick={onAddFriendModalOpen}>
+            <MdPersonAddAlt size={20} />
+          </Icon>
         </div>
         <Tabs defaultValue="all" className="px-0.5">
           <TabsList className="w-full justify-stretch bg-inherit">
@@ -92,6 +78,10 @@ export default function RelationShip() {
         {relationships.map((relationship) => (
           <UserBox key={relationship.with_user.id} user={relationship.with_user} />
         ))}
+        {createPortal(
+          <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />,
+          document.body
+        )}
       </div>
     </aside>
   );

@@ -25,6 +25,7 @@ import { appendNonNullableValuesThatWereChanged, isFormValid } from '@/utils/for
 import dynamic from 'next/dynamic';
 import { MAX_LENGTH_OF_BIO } from '@/constants';
 import { AvatarEditable } from '@/components/ui/avatar';
+import { USERNAME_VALIDATOR } from '@/utils/validation';
 
 const CropModal = dynamic(() => import('@/components/modals/CropModal'));
 
@@ -34,14 +35,7 @@ interface SettingsModalProps {
 }
 
 const formSchema = z.object({
-  username: z
-    .string()
-    .min(5, 'Username must contain at least 5 characters')
-    .regex(
-      /^(?!.*\s)[a-z0-9_]+$/i,
-      'Please use only lowercase letters (a-z), numbers (0-9), and underscores.'
-    )
-    .optional(),
+  username: USERNAME_VALIDATOR.optional(),
   image: z.any(),
   bio: z.string().max(100, { message: 'Bio must be 100 characters or less' }).optional()
 });

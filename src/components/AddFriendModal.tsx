@@ -15,7 +15,9 @@ import {
 } from '@/components/ui/form';
 import { put } from '@/lib/api/fetch/fetch';
 import { useSession } from '@/hooks/use-session';
-import { ApplicationError } from '@/lib/api/fetch/errors';
+import { BadRequestError } from '@/lib/api/fetch/errors';
+import { useToast } from '@/hooks/use-toast';
+import { USERNAME_VALIDATOR } from '@/utils/validation';
 
 interface InProps {
   isOpen: boolean;
@@ -23,23 +25,23 @@ interface InProps {
 }
 
 const formSchema = z.object({
-  username: z
-    .string()
-    .min(5, 'Username must contain at least 5 characters')
-    .regex(
-      /^(?!.*\s)[a-z0-9_]+$/i,
-      'Please use only lowercase letters (a-z), numbers (0-9), and underscores.'
-    )
+  username: USERNAME_VALIDATOR
 });
 
 export default function AddFriendModal({ isOpen, onClose }: InProps) {
   const { session } = useSession();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       username: ''
     },
     resolver: zodResolver(formSchema)
   });
+
+  const onModalClose = () => {
+    form.reset();
+    onClose();
+  };
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     try {
@@ -53,11 +55,15 @@ export default function AddFriendModal({ isOpen, onClose }: InProps) {
           'Content-Type': 'application/json'
         }
       });
+      toast({
+        title: `Friend request to ${data.username} was sent.`
+        // action: TODO: make undo
+      });
       onClose();
-    } catch (e) {
-      if (e instanceof ApplicationError) {
+    } catch (e: unknown) {
+      if (e instanceof BadRequestError) {
         form.setError('username', {
-          message: "Hm, didn't work. Double check that the username is correct."
+          message: e.data.detail
         });
       } else {
         form.setError('username', { message: 'Unknown error. Please try again later.' });
@@ -68,11 +74,11 @@ export default function AddFriendModal({ isOpen, onClose }: InProps) {
   const username = form.watch('username');
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onModalClose}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2 pb-4">
-            <h2 className="text-xl font-semibold leading-7 text-gray-900">Friend request</h2>
+            <h2 className="text-xl font-semibold leading-7 text-gray-900">Add friend</h2>
           </div>
           <FormField
             control={form.control}
