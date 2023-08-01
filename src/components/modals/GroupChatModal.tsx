@@ -58,16 +58,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, relati
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2
-              className="
-                text-base
-                font-semibold
-                leading-7
-                text-gray-900
-              "
-            >
-              Create a group chat
-            </h2>
+            <h2 className="leading-7text-gray-900 text-base font-semibold">Create a group chat</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
               Create a chat with more than 2 people.
             </p>

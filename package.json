@@ -11,9 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint-staged": "lint-staged",
-    "prettier": "prettier --write --ignore-unknown .",
-    "prettier:check": "prettier --check --ignore-unknown ."
+    "lint-staged": "lint-staged"
   },
   "git": {
     "pre-commit": "lint-staged"
@@ -80,7 +78,7 @@
     "eslint-plugin-unicorn": "^45.0.2",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.4",
-    "prettier-plugin-tailwindcss": "^0.2.2",
+    "prettier-plugin-tailwindcss": "^0.2.8",
     "tailwindcss": "3.3.2"
   }
 }

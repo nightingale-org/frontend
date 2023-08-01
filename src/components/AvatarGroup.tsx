@@ -19,13 +19,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({ users = [] }) => {
       {slicedUsers.map((user, index) => (
         <div
           key={user.id}
-          className={`
-            absolute
-            inline-block
-            h-[21px]
-            w-[21px]
-            overflow-hidden
-            rounded-full
+          className={`absolute inline-block h-[21px] w-[21px] overflow-hidden rounded-full
             ${positionMap[index as keyof typeof positionMap]}
           `}
         >

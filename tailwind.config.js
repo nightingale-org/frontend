@@ -72,5 +72,5 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate'), require('autoprefixer')]
+  plugins: [require('tailwindcss-animate'), require('autoprefixer'), require('@tailwindcss/forms')]
 };

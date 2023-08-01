@@ -107,7 +107,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, conversa
                               <div className="text-sm font-light text-neutral-600">Delete</div>
                             </div>
                           </div>
-                          <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
+                          <div className="w-full py-5 sm:px-0 sm:pt-0">
                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                               {conversation.isGroup && (
                                 <div>
@@ -117,7 +117,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, conversa
                                   font-medium
                                   text-gray-500
                                   sm:w-40
-                                  sm:flex-shrink-0
+                                  sm:shrink-0
                                 "
                                   >
                                     Emails
@@ -142,7 +142,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, conversa
                                   font-medium
                                   text-gray-500
                                   sm:w-40
-                                  sm:flex-shrink-0
+                                  sm:shrink-0
                                 "
                                   >
                                     Email
@@ -169,7 +169,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, conversa
                                     font-medium
                                     text-gray-500
                                     sm:w-40
-                                    sm:flex-shrink-0
+                                    sm:shrink-0
                                   "
                                     >
                                       Joined

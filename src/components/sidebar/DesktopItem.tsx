@@ -20,19 +20,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({ label, href, icon: Icon, acti
       <Link
         href={href ?? '#'}
         className={clsx(
-          `
-            group
-            flex
-            gap-x-3
-            rounded-md
-            p-3
-            text-sm
-            font-semibold
-            leading-6
-            text-gray-500
-            hover:bg-gray-100
-            hover:text-black
-          `,
+          `group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 text-gray-500 hover:bg-gray-100 hover:text-black`,
           active && 'bg-gray-100 text-black'
         )}
       >

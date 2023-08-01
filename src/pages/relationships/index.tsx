@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Layout } from '@/layouts';
 import { getRelationships } from '@/lib/api/query-functions';
 import { GetServerSideProps } from 'next';
-import AddFriendModal from '@/components/AddFriendModal';
 import * as React from 'react';
 import { useState } from 'react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
@@ -42,9 +41,7 @@ export default function RelationShip() {
 
   return (
     <aside
-      className="
-        fixed
-        inset-y-0
+      className="fixed inset-y-0
         left-0
         block
         w-full
@@ -73,20 +70,13 @@ export default function RelationShip() {
         <Tabs defaultValue="all" className="px-0.5">
           <TabsList className="w-full justify-stretch bg-inherit">
             <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="all">
-              All
+              <span className="text-base font-medium">All</span>
             </TabsTrigger>
             <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="pending">
-              Pending
+              <span className="text-base font-medium">Pending</span>
             </TabsTrigger>
             <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="blocked">
-              Blocked
-            </TabsTrigger>
-            <TabsTrigger
-              onClick={onAddFriendModalOpen}
-              className="flex-1 data-[state=active]:bg-emerald-100"
-              value="add_friend"
-            >
-              Add friend
+              <span className="text-base font-medium">Blocked</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="all">
@@ -97,9 +87,6 @@ export default function RelationShip() {
           </TabsContent>
           <TabsContent value="blocked">
             <RelationShipList />
-          </TabsContent>
-          <TabsContent value="add_friend">
-            <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />
           </TabsContent>
         </Tabs>
         {relationships.map((relationship) => (

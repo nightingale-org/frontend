@@ -161,16 +161,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
-              <h2
-                className="
-                text-base
-                font-semibold
-                leading-7
-                text-gray-900
-              "
-              >
-                Profile
-              </h2>
+              <h2 className="text-base font-semibold leading-7 text-gray-900">Profile</h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">Edit your public information.</p>
 
               <div className="mt-10 flex flex-col gap-y-8">
@@ -240,15 +231,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          <div
-            className="
-            mt-6
-            flex
-            items-center
-            justify-end
-            gap-x-6
-          "
-          >
+          <div className="mt-6 flex items-center justify-end gap-x-6">
             <Button
               type="button"
               disabled={isLoading}

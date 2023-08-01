@@ -296,7 +296,11 @@ async function makeRequest<T>({
   let data = await parseResponseBody(response);
 
   if (response.status >= 400) {
-    throw new ApplicationError('Response status does not indicate success', response.status, data);
+    throw new ApplicationError(
+      `HTTP error: ${response.status} ${JSON.stringify(data)}`,
+      response.status,
+      data
+    );
   }
 
   if (validationModel) {
@@ -333,7 +337,7 @@ async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: 
 }
 
 const isBodyShouldBeStringified = (init: RequestInit): boolean =>
-  init.headers?.['Content-Type'].indexOf('json') > -1 && typeof init.body === 'object';
+  init.headers?.['Content-Type']?.indexOf('json') > -1 && typeof init.body === 'object';
 
 const shouldPrependBaseUrl = (input: RequestInfo): input is string =>
   typeof input === 'string' && !input.startsWith(process.env.NEXT_PUBLIC_BACKEND_API_URL);

@@ -30,19 +30,7 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
       {isLoading && <LoadingModal />}
       <div
         onClick={handleClick}
-        className="
-          relative
-          flex
-          w-full
-          cursor-pointer
-          items-center
-          space-x-3
-          rounded-lg
-          bg-white
-          p-3
-          transition
-          hover:bg-neutral-100
-        "
+        className="relative flex w-full cursor-pointer items-center space-x-3 rounded-lg bg-white p-3 transition hover:bg-neutral-100"
       >
         <Avatar>
           <AvatarImage src={user.image} />

@@ -1,5 +1,3 @@
-"use strict"
+console.log(JSON.stringify(5000n));
 
-const { a } = {}
-
-console.log(a)
+// string, boolean, number, null, undefined, object, function, bigint
