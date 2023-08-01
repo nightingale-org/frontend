@@ -33,18 +33,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
       />
       <aside
         className={clsx(
-          `
-        fixed
-        inset-y-0
-        overflow-y-auto
-        border-r
-        border-gray-200
-        pb-20
-        lg:left-20
-        lg:block
-        lg:w-80
-        lg:pb-0
-      `,
+          `overflow-y-autoborder-r fixed inset-y-0 border-gray-200 pb-20 lg:left-20 lg:block lg:w-80 lg:pb-0`,
           isOpen ? 'hidden' : 'left-0 block w-full'
         )}
       >
@@ -53,15 +42,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             <div className="text-2xl font-bold text-neutral-800">Messages</div>
             <div
               onClick={() => setIsModalOpen(true)}
-              className="
-                cursor-pointer
-                rounded-full
-                bg-gray-100
-                p-2
-                text-gray-600
-                transition
-                hover:opacity-75
-              "
+              className="cursor-pointer rounded-full bg-gray-100 p-2 text-gray-600 transition hover:opacity-75"
             >
               <MdOutlineGroupAdd size={20} />
             </div>

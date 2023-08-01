@@ -5,6 +5,7 @@ import { NextPage } from 'next';
 import { inter } from '@/lib/fonts';
 import { useState } from 'react';
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/toaster';
 
 export type NextPageWithLayoutAndAuth<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactElement;
@@ -32,6 +33,7 @@ export default function App({
             ) : (
               getLayout(<Component {...pageProps} />)
             )}
+            <Toaster />
           </main>
         </SessionProvider>
       </Hydrate>
