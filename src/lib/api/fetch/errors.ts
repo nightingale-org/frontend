@@ -26,25 +26,17 @@ export class UnsupportedFileType extends InvalidOption {
   }
 }
 
-// Example error:
-// {
-//   "error": "A user with given email address ... already belongs...",
-//   "details": null,
-//   "code": "UserAlreadyInOrganization"
-// }
-
-export interface ErrorDetails {
-  error: string;
-  details: string | null;
-  code: string | null;
-}
+export type RequestErrorData = {
+  readonly code: string;
+  readonly detail: string;
+};
 
 export class ApplicationError extends Error {
-  status: number;
-  data?: ErrorDetails | string;
-  retry?: () => void;
+  readonly status: number;
+  readonly data?: unknown;
+  readonly retry?: () => void;
 
-  constructor(message: string, statusCode: number, data?: ErrorDetails | string) {
+  constructor(message: string, statusCode: number, data?: unknown) {
     super(message);
     this.status = statusCode;
     this.retry = undefined;
@@ -53,6 +45,12 @@ export class ApplicationError extends Error {
 
   allowRetry(): boolean {
     return this.status === 500;
+  }
+}
+
+export class BadRequestError extends ApplicationError {
+  constructor(statusCode: number, readonly data: RequestErrorData) {
+    super(`HTTP error: ${statusCode} ${data.detail}`, statusCode, data);
   }
 }
 

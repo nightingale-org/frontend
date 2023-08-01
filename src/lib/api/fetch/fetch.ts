@@ -1,5 +1,12 @@
 import type { CtxOrReq } from 'next-auth/client/_utils';
-import { ApplicationError, ConflictError, NotFoundError, PreconditionFailedError } from './errors';
+import {
+  ApplicationError,
+  BadRequestError,
+  RequestErrorData,
+  ConflictError,
+  NotFoundError,
+  PreconditionFailedError
+} from './errors';
 import { getSession } from 'next-auth/react';
 import { z } from 'zod';
 
@@ -256,7 +263,7 @@ async function makeRequest<T>({
     };
   }
 
-  if (isBodyShouldBeStringified(init)) {
+  if (shouldBodyBeStringified(init)) {
     init.body = JSON.stringify(init.body);
   }
 
@@ -277,7 +284,7 @@ async function makeRequest<T>({
     throw new ApplicationError('Network error', 0, error);
   }
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 403) {
     // TODO: handle unauthorized errors(401 UNAUTHORIZED and 403 FORBIDDEN)
   }
 
@@ -295,19 +302,15 @@ async function makeRequest<T>({
 
   let data = await parseResponseBody(response);
 
-  if (response.status >= 400) {
-    throw new ApplicationError(
-      `HTTP error: ${response.status} ${JSON.stringify(data)}`,
-      response.status,
-      data
-    );
+  if (response.status === 400) {
+    throw new BadRequestError(response.status, data as RequestErrorData);
   }
 
   if (validationModel) {
     data = validationModel.parse(data);
   }
 
-  return data;
+  return data as any;
 }
 
 async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: string }> {
@@ -336,13 +339,13 @@ async function getAuthorizationHeader(ctx?: CtxOrReq): Promise<{ [key: string]: 
   };
 }
 
-const isBodyShouldBeStringified = (init: RequestInit): boolean =>
+const shouldBodyBeStringified = (init: RequestInit): boolean =>
   init.headers?.['Content-Type']?.indexOf('json') > -1 && typeof init.body === 'object';
 
 const shouldPrependBaseUrl = (input: RequestInfo): input is string =>
   typeof input === 'string' && !input.startsWith(process.env.NEXT_PUBLIC_BACKEND_API_URL);
 
-async function parseResponseBody(response: Response): Promise<any> {
+async function parseResponseBody(response: Response): Promise<unknown> {
   const contentType = response.headers.get('Content-Type');
 
   if (contentType !== null && contentType.indexOf('json') > -1) {
