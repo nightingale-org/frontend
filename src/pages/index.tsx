@@ -30,7 +30,7 @@ Home.auth = {
 export const getServerSideProps: GetServerSideProps<ConversationLayoutProps> = async (context) => {
   const [conversations, relationships] = await Promise.all([
     getConversations({ ctx: context }),
-    getRelationships({ ctx: context, type: RelationshipType.established })
+    getRelationships({ ctx: context, type: RelationshipType.settled })
   ]);
 
   return {

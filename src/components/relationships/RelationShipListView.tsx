@@ -1,20 +1,20 @@
 import { RelationShip } from '@/lib/api/schemas';
-import UserBox from './UserBox';
-import { SearchBar } from './ui/search-bar';
+import UserBox from '../UserBox';
+import { SearchBar } from '../ui/search-bar';
 import { useState } from 'react';
 
 interface InProps {
   relationships: RelationShip[];
 }
 
-export default function RelationShipList({ relationships }: InProps) {
+export default function RelationShipListView({ relationships }: InProps) {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const onChange = async (value) => {
     setSearchQuery(value);
 
     const Fuse = (await import('fuse.js')).default;
-    const fuse = new Fuse(relationships.map((r) => r.with_user.username));
+    const fuse = new Fuse(relationships.map((r) => r.target.username));
 
     console.log(fuse.search(value));
   };
@@ -29,7 +29,7 @@ export default function RelationShipList({ relationships }: InProps) {
         onChange={onChange}
       />
       {relationships.map((relationship) => (
-        <UserBox key={relationship.with_user.id} user={relationship.with_user} />
+        <UserBox key={relationship.target.id} user={relationship.target} />
       ))}
     </div>
   );

@@ -1,4 +1,4 @@
-import { type AuthorizationData, get, post } from '@/lib/api/fetch/fetch';
+import { type AuthorizationData, get, post, put } from '@/lib/api/fetch/fetch';
 import { z } from 'zod';
 import {
   Conversation,
@@ -19,6 +19,20 @@ export async function getConversationById(id: string, { ctx, accessToken }: Auth
   });
 }
 
+export async function addToFriends(username: string, { ctx, accessToken }: AuthorizationData) {
+  return await put({
+    url: '/relationships',
+    data: {
+      username: username
+    },
+    accessToken: accessToken as any,
+    ctx: ctx as any,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}
+
 export async function getConversations({ ctx, accessToken }: AuthorizationData) {
   return await get({
     url: `/conversations`,
@@ -32,7 +46,7 @@ export async function getConversations({ ctx, accessToken }: AuthorizationData) 
 export async function getRelationships({
   ctx,
   accessToken,
-  type = RelationshipType.established
+  type = RelationshipType.settled
 }: AuthorizationData & { type?: RelationshipType }) {
   const searchParams = new URLSearchParams({
     type: type.toString()

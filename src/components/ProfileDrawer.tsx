@@ -22,8 +22,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, conversa
   const otherUser = useOtherUser(conversation);
 
   const joinedDate = useMemo(() => {
-    return format(new Date(otherUser.createdAt), 'PP');
-  }, [otherUser.createdAt]);
+    return format(new Date(otherUser.created_at), 'PP');
+  }, [otherUser.created_at]);
 
   const title = useMemo(() => {
     return conversation.name || otherUser.name;

@@ -1,5 +1,4 @@
-import RelationShipList from '@/components/RelationShipList';
-import UserBox from '@/components/UserBox';
+import RelationShipListView from '@/components/relationships/RelationShipListView';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Layout } from '@/layouts';
 import { getRelationships } from '@/lib/api/query-functions';
@@ -15,12 +14,17 @@ import { MdPersonAddAlt } from 'react-icons/md';
 import { Icon } from '@/components/ui/icon';
 import { createPortal } from 'react-dom';
 import AddFriendModal from '@/components/AddFriendModal';
+import dynamic from 'next/dynamic';
+
+const RelationShipList = dynamic(() => import('@/components/relationships/RelationShipList'), {
+  ssr: false
+});
 
 export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ctx) => {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(queryKeys.relationshipsList(RelationshipType.established), () =>
-    getRelationships({ ctx, type: RelationshipType.established })
+  await queryClient.prefetchQuery(queryKeys.relationshipsList(RelationshipType.settled), () =>
+    getRelationships({ ctx, type: RelationshipType.settled })
   );
 
   return {
@@ -30,13 +34,13 @@ export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ct
   };
 };
 
-export default function RelationShip() {
+export default function RelationShipPage() {
   const [isAddFriendModalOpened, setIsAddFriendModalOpened] = useState(false);
 
-  const { data: relationships } = useGetRelationships(RelationshipType.established);
+  const { data } = useGetRelationships(RelationshipType.settled);
+  const relationships = data!; // prefetched in getServerSideProps
 
   const onAddFriendModalOpen = () => {
-    console.log('add friend model has been opened');
     setIsAddFriendModalOpened(true);
   };
 
@@ -66,28 +70,31 @@ export default function RelationShip() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="all">
-            <RelationShipList relationships={relationships} />
+            <RelationShipListView relationships={relationships} />
           </TabsContent>
           <TabsContent value="pending">
-            <RelationShipList />
+            {
+              // TODO: It should fetch ingoing + outgoing but changes on the backend required
+            }
+            <RelationShipList type={RelationshipType.pending} />
           </TabsContent>
           <TabsContent value="blocked">
-            <RelationShipList />
+            <RelationShipList type={RelationshipType.blocked} />
           </TabsContent>
         </Tabs>
-        {relationships.map((relationship) => (
-          <UserBox key={relationship.with_user.id} user={relationship.with_user} />
-        ))}
-        {createPortal(
-          <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />,
-          document.body
-        )}
+        {
+          // TODO: Consider moving createPortal inside the component
+          createPortal(
+            <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />,
+            document.body
+          )
+        }
       </div>
     </aside>
   );
 }
 
-RelationShip.getLayout = (page) => {
+RelationShipPage.getLayout = (page) => {
   return <Layout.Default>{page}</Layout.Default>;
 };
-RelationShip.auth = {};
+RelationShipPage.auth = {};

@@ -1,19 +1,18 @@
 import { z } from 'zod';
 
 export enum RelationshipType {
-  ingoing_request = 0,
-  outgoing_request,
-  blocked,
-  established
+  pending = 1,
+  blocked = 2,
+  settled = 3
 }
 
 export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),
   email: z.string(),
-  emailVerified: z.date().nullable(),
+  email_verified: z.string().datetime().nullable(),
   image: z.string().nullable(),
-  createdAt: z.date().nullable(),
+  created_at: z.string().datetime().nullable(),
   bio: z.string().nullable()
 });
 export type User = z.infer<typeof UserSchema>;
@@ -26,7 +25,7 @@ export type ExistsResponse = z.infer<typeof ExistsResponseSchema>;
 export const MessageSchema = z.object({
   id: z.string(),
   text: z.string(),
-  created_at: z.date(),
+  created_at: z.string().datetime(),
   seen_by: z.array(UserSchema),
   author: UserSchema
 });
@@ -34,7 +33,7 @@ export type Message = z.infer<typeof MessageSchema>;
 
 export const ConversationSchema = z.object({
   id: z.string(),
-  created_at: z.date(),
+  created_at: z.string().datetime(),
   last_message_at: z.date().nullable(),
   name: z.string().nullable(),
   user_limit: z.number().nullable(),
@@ -46,7 +45,8 @@ export const ConversationSchema = z.object({
 export type Conversation = z.infer<typeof ConversationSchema>;
 
 export const RelationShipSchema = z.object({
-  with_user: UserSchema,
+  id: z.string(),
+  target: UserSchema,
   type: z.nativeEnum(RelationshipType)
 });
 export type RelationShip = z.infer<typeof RelationShipSchema>;

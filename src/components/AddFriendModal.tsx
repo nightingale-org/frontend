@@ -1,107 +1,92 @@
 import Modal from '@/components/modals/Modal';
-import React from 'react';
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { put } from '@/lib/api/fetch/fetch';
 import { useSession } from '@/hooks/use-session';
 import { BadRequestError } from '@/lib/api/fetch/errors';
 import { useToast } from '@/hooks/use-toast';
 import { USERNAME_VALIDATOR } from '@/utils/validation';
+import { Label } from '@/components/ui/label';
+import { addToFriends } from '@/lib/api/query-functions';
+import { cn } from '@/utils/css-class-merge';
+import { z } from 'zod';
 
 interface InProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const formSchema = z.object({
-  username: USERNAME_VALIDATOR
-});
-
 export default function AddFriendModal({ isOpen, onClose }: InProps) {
   const { session } = useSession();
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
-    defaultValues: {
-      username: ''
-    },
-    resolver: zodResolver(formSchema)
-  });
+  const [username, setUsername] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const buttonDisabled = Boolean(errorMessage) || username === '';
 
   const onModalClose = () => {
-    form.reset();
+    setUsername('');
+    setErrorMessage('');
     onClose();
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+  const onUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    setUsername(event.target.value);
+
+    if (event.target.value === '') {
+      return setErrorMessage('');
+    }
+
     try {
-      await put({
-        url: '/relationships',
-        data: {
-          username: data.username
-        },
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      toast({
-        title: `Friend request to ${data.username} was sent.`
-        // action: TODO: make undo
-      });
-      onClose();
+      USERNAME_VALIDATOR.parse(event.target.value);
     } catch (e: unknown) {
-      if (e instanceof BadRequestError) {
-        form.setError('username', {
-          message: e.data.detail
-        });
-      } else {
-        form.setError('username', { message: 'Unknown error. Please try again later.' });
+      if (e instanceof z.ZodError) {
+        return setErrorMessage(e.issues[0].message);
       }
     }
+
+    setErrorMessage('');
   };
 
-  const username = form.watch('username');
+  const onClick = () => {
+    addToFriends(username, { accessToken: session.accessToken })
+      .then(() => {
+        toast({
+          title: `Friend request to ${username} was sent.`
+          // action: TODO: make undo
+        });
+        onModalClose();
+      })
+      .catch((e) => {
+        if (e instanceof BadRequestError) {
+          setErrorMessage(e.data.detail);
+        } else {
+          setErrorMessage('Unknown error. Please try again later.');
+        }
+      });
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onModalClose}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-2 pb-4">
-            <h2 className="text-xl font-semibold leading-7 text-gray-900">Add friend</h2>
-          </div>
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Friend&apos;s username</FormLabel>
-                <FormControl>
-                  <Input
-                    autoComplete="off"
-                    placeholder="You can add friends with their Nightingale username"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button disabled={!username} type="submit" className="mt-6">
-            Add friend
-          </Button>
-        </form>
-      </Form>
+      <div className="space-y-2 pb-6">
+        <h2 className="text-xl font-semibold leading-7 text-gray-900">Add friend</h2>
+      </div>
+      <Label>
+        <span className={cn('mb-2 block', { 'text-destructive': errorMessage })}>
+          Friend&apos;s username
+        </span>
+        <Input
+          value={username}
+          onChange={onUsernameChange}
+          placeholder="You can add friends with their Nightingale username"
+        />
+      </Label>
+      <p className={cn({ hidden: !errorMessage }, 'mt-2 text-sm font-medium text-destructive')}>
+        {errorMessage}
+      </p>
+      <Button disabled={buttonDisabled} onClick={onClick} type="submit" className="mt-6">
+        Add friend
+      </Button>
     </Modal>
   );
 }
