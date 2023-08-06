@@ -50,7 +50,7 @@ export class ApplicationError extends Error {
 
 export class BadRequestError extends ApplicationError {
   constructor(statusCode: number, readonly data: RequestErrorData) {
-    super(`HTTP error: ${statusCode} ${data.detail}`, statusCode, data);
+    super(`HTTP error: ${statusCode} ${JSON.stringify(data)}`, statusCode, data);
   }
 }
 
