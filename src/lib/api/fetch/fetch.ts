@@ -5,7 +5,9 @@ import {
   RequestErrorData,
   ConflictError,
   NotFoundError,
-  PreconditionFailedError
+  PreconditionFailedError,
+  UnauthorizedError,
+  ForbiddenError
 } from './errors';
 import { getSession } from 'next-auth/react';
 import { z } from 'zod';
@@ -284,8 +286,13 @@ async function makeRequest<T>({
     throw new ApplicationError('Network error', 0, error);
   }
 
-  if (response.status === 401 || response.status === 403) {
-    // TODO: handle unauthorized errors(401 UNAUTHORIZED and 403 FORBIDDEN)
+  if (response.status === 401) {
+    // TODO: handle unauthorized errors(401 UNAUTHORIZED and 403 FORBIDDEN) refresh token silently on 401
+    throw new UnauthorizedError();
+  }
+
+  if (response.status === 403) {
+    throw new ForbiddenError();
   }
 
   if (response.status === 404) {
