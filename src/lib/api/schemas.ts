@@ -10,7 +10,7 @@ export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),
   email: z.string(),
-  email_verified: z.string().datetime().nullable(),
+  email_verified: z.string().datetime().nullish(),
   image: z.string().nullable(),
   created_at: z.string().datetime().nullable(),
   bio: z.string().nullable()
