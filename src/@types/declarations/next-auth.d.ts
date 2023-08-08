@@ -13,5 +13,9 @@ declare global {
         bio: string | null;
       };
     }
+
+    interface Account {
+      expires_at: number;
+    }
   }
 }
