@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import Modal from '../modals/Modal';
+import Modal from './Modal';
 import { toast } from 'react-hot-toast';
 import { post } from '@/lib/api/fetch/fetch';
 import { useSession } from '@/hooks/use-session';
