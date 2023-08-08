@@ -37,7 +37,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {maxLength ? (
-          <div className="absolute right-2 top-8 bg-white text-xs">{numberOfCharactersLeft}</div>
+          <div className="absolute right-2 top-8 select-none bg-white text-xs">
+            {numberOfCharactersLeft}
+          </div>
         ) : null}
       </div>
     );
