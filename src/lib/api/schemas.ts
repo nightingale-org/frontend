@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { AVATAR_PLACEHOLDER_SRC } from '@/constants';
 
 export enum RelationshipType {
   pending = 1,
@@ -6,12 +7,22 @@ export enum RelationshipType {
   settled = 3
 }
 
+export enum RelationshipTypeExpanded {
+  ingoing_request = 1,
+  outgoing_request = 2,
+  blocked = 3,
+  settled = 4
+}
+
 export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),
   email: z.string(),
   email_verified: z.string().datetime().nullish(),
-  image: z.string().nullable(),
+  image: z
+    .string()
+    .nullable()
+    .transform((val) => val || AVATAR_PLACEHOLDER_SRC),
   created_at: z.string().datetime().nullable(),
   bio: z.string().nullable()
 });
@@ -47,6 +58,6 @@ export type Conversation = z.infer<typeof ConversationSchema>;
 export const RelationShipSchema = z.object({
   id: z.string(),
   target: UserSchema,
-  type: z.nativeEnum(RelationshipType)
+  type: z.nativeEnum(RelationshipTypeExpanded)
 });
 export type RelationShip = z.infer<typeof RelationShipSchema>;

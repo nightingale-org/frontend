@@ -8,7 +8,7 @@ import Modal from './Modal';
 import Button from '../Button';
 import { toast } from 'react-hot-toast';
 import { RelationShip } from '@/lib/api/schemas';
-import { post } from '@/lib/api/fetch/fetch';
+import { post } from '@/lib/api/fetch';
 
 interface GroupChatModalProps {
   isOpen?: boolean;
@@ -75,8 +75,8 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, relati
                 disabled={isLoading}
                 label="Members"
                 options={relationships.map((relationship) => ({
-                  value: relationship.with_user.id,
-                  label: relationship.with_user.id
+                  value: relationship.target.id,
+                  label: relationship.target.id
                 }))}
                 onChange={(value) =>
                   setValue('members', value, {

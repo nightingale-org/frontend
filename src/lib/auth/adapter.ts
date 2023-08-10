@@ -1,5 +1,5 @@
 import type { Adapter, AdapterAccount, AdapterSession, AdapterUser } from 'next-auth/adapters';
-import { del, FetchInputMethod, get, patch, post } from '@/lib/api/fetch/fetch';
+import { del, FetchInputMethod, get, patch, post } from '@/lib/api/fetch';
 import { NotFoundError } from '@/lib/api/fetch/errors';
 import { UserSchema } from '@/lib/api/schemas';
 

@@ -355,7 +355,11 @@ const shouldPrependBaseUrl = (input: RequestInfo): input is string =>
 async function parseResponseBody(response: Response): Promise<unknown> {
   const contentType = response.headers.get('Content-Type');
 
-  if (contentType !== null && contentType.indexOf('json') > -1) {
+  if (
+    contentType !== null &&
+    contentType.indexOf('json') > -1 &&
+    (response.status === 200 || response.status === 201)
+  ) {
     return await response.json();
   }
 

@@ -1,4 +1,4 @@
-import { type AuthorizationData, get, post, put } from '@/lib/api/fetch/fetch';
+import { type AuthorizationData, get, post, put } from '@/lib/api/fetch';
 import { z } from 'zod';
 import {
   Conversation,
@@ -76,13 +76,25 @@ export async function checkIfUsernameIsAvailable(
 ): Promise<boolean> {
   const resp = await post({
     url: `/users/availability`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json'
-    },
+    accessToken: accessToken,
     data: { username: username },
     validationModel: ExistsResponseSchema
   });
 
   return !resp.exists;
+}
+
+export async function updateRelationshipStatus(
+  new_status: 'accepted' | 'ignored',
+  relationshipId: string,
+  accessToken: string
+) {
+  await post({
+    url: '/relationships/update',
+    accessToken: accessToken,
+    data: {
+      new_state: new_status,
+      relationship_id: relationshipId
+    }
+  });
 }

@@ -11,6 +11,9 @@ export function useGetRelationships(type: RelationshipType) {
 
   return useQuery({
     queryKey: queryKeys.relationshipsList(type),
-    queryFn: () => getRelationships({ accessToken, type })
+    queryFn: () =>
+      getRelationships({ accessToken, type }).then(
+        (response) => new Promise((resolve) => setTimeout(() => resolve(response), 50000))
+      )
   });
 }

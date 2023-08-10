@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Modal from './Modal';
 import { toast } from 'react-hot-toast';
-import { post } from '@/lib/api/fetch/fetch';
+import { post } from '@/lib/api/fetch';
 import { useSession } from '@/hooks/use-session';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

@@ -6,7 +6,7 @@ import Modal from '@/components/modals/Modal';
 import Button from '@/components/Button';
 import useActiveConversationStatus from '@/hooks/use-active-conversation-status';
 import { toast } from 'react-hot-toast';
-import { del } from '@/lib/api/fetch/fetch';
+import { del } from '@/lib/api/fetch';
 import { useSession } from '@/hooks/use-session';
 
 interface ConfirmModalProps {
