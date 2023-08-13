@@ -67,8 +67,6 @@ export const authOptions: AuthOptions = {
 
           if (!response.ok) throw tokens;
 
-          console.log('successfully obtained new access token');
-
           return {
             ...token, // Keep the previous token properties
             access_token: tokens.access_token,

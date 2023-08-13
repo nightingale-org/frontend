@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface RelationshipListItemProps {
   relationship: RelationShip;
-  onRelationshipStatusUpdate: (arg: RelationShip, new_status: 'ignored' | 'accepted') => void;
+  onRelationshipStatusUpdate?: (arg: RelationShip, new_status: 'ignored' | 'accepted') => void;
 }
 
 export function RelationshipListItemSkeleton() {
@@ -34,12 +34,12 @@ const RelationshipListItem = ({
 
   const handleAcceptRequest = () => {
     updateRelationshipStatus('accepted', relationship.id, session.accessToken).then(() =>
-      onRelationshipStatusUpdate(relationship, 'accepted')
+      onRelationshipStatusUpdate?.(relationship, 'accepted')
     );
   };
   const handleIgnoreRequest = () => {
     updateRelationshipStatus('ignored', relationship.id, session.accessToken).then(() => {
-      onRelationshipStatusUpdate(relationship, 'ignored');
+      onRelationshipStatusUpdate?.(relationship, 'ignored');
     });
   };
 

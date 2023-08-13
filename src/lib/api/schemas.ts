@@ -14,6 +14,18 @@ export enum RelationshipTypeExpanded {
   settled = 4
 }
 
+export const foldRelationshipType = (type: RelationshipTypeExpanded): RelationshipType => {
+  switch (type) {
+    case RelationshipTypeExpanded.ingoing_request:
+    case RelationshipTypeExpanded.outgoing_request:
+      return RelationshipType.pending;
+    case RelationshipTypeExpanded.blocked:
+      return RelationshipType.blocked;
+    case RelationshipTypeExpanded.settled:
+      return RelationshipType.settled;
+  }
+};
+
 export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),

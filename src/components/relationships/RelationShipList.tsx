@@ -5,11 +5,11 @@ import { SearchBar } from '@/components/ui/search-bar';
 import RelationshipListItem, {
   RelationshipListItemSkeleton
 } from '@/components/relationships/RelationshipListItem';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/api/query-keys';
-import { useWebsocket } from '@/hooks/use-websocket';
 import { SkeletonContainer } from '@/components/ui/skeleton';
+import { DEBUG } from '@/constants';
 
 type RelationShipListProps = {
   type: RelationshipType;
@@ -18,43 +18,23 @@ type RelationShipListProps = {
 function RelationShipList({ type }: RelationShipListProps) {
   const { data: relationships, status } = useGetRelationships(type);
   const queryClient = useQueryClient();
-  const websocket = useWebsocket();
   const [searchQuery, setSearchQuery] = useState('');
   const divContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!websocket) {
-      return;
-    }
-
-    const onNewRelationship = (relationship: RelationShip) => {
-      queryClient.setQueryData(
-        queryKeys.relationshipsList(type),
-        (oldRelationships: RelationShip[]) => {
-          return [relationship, ...oldRelationships];
-        }
-      );
-    };
-
-    const onRelationshipDelete = (relationship: RelationShip) => {
-      queryClient.setQueryData(queryKeys.relationshipsList(type), (old: RelationShip[]) =>
-        old.filter((r) => r.id !== relationship.id)
-      );
-    };
-
-    websocket.on('relationship:new', onNewRelationship);
-    websocket.on('relationship:delete', onRelationshipDelete);
-
-    return () => {
-      websocket.off('relationship:new', onNewRelationship);
-      websocket.off('relationship:delete', onRelationshipDelete);
-    };
-  }, [websocket, queryClient, type]);
-
+  // Only used if the relationships are pending.
+  // This event handler is used to accept/reject friend requests.
   const handleRelationshipStatusUpdate = useCallback(
     (relationship: RelationShip, newStatus: 'ignored' | 'accepted') => {
+      if (type !== RelationshipType.pending) {
+        if (DEBUG)
+          console.warn(
+            'handleRelationshipStatusUpdate should only be used for pending relationships.'
+          );
+        return;
+      }
+
       queryClient.setQueryData(
-        queryKeys.relationshipsList(type),
+        queryKeys.relationshipsList(RelationshipType.pending),
         (oldRelationships: RelationShip[]) => {
           if (newStatus === 'accepted') {
             void queryClient.invalidateQueries({
@@ -68,7 +48,7 @@ function RelationShipList({ type }: RelationShipListProps) {
         }
       );
     },
-    [queryClient, type]
+    [queryClient]
   );
 
   const onSearchQueryChange = useCallback((newSearchQuery: string) => {
@@ -79,7 +59,7 @@ function RelationShipList({ type }: RelationShipListProps) {
     <div className="flex h-full w-full flex-col">
       <div className="px-3">
         <SearchBar
-          className="h-9 rounded-full"
+          className="h-9"
           value={searchQuery}
           type="text"
           placeholder="Search"
