@@ -1,10 +1,9 @@
-import type { IconType } from 'react-icons/lib';
 import type { DehydratedState } from '@tanstack/react-query';
 
 export type RouteBase = {
   label: string;
   active?: boolean;
-  icon: IconType;
+  icon: React.ElementType;
 };
 
 export type Route =

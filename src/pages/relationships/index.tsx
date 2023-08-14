@@ -8,7 +8,6 @@ import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query';
 import type { DehydratedProps } from '@/@types';
 import { queryKeys } from '@/lib/api/query-keys';
 import { foldRelationshipType, RelationShip, RelationshipType } from '@/lib/api/schemas';
-import { MdPersonAddAlt } from 'react-icons/md';
 import { Icon } from '@/components/ui/icon';
 import { createPortal } from 'react-dom';
 import AddFriendModal from '@/components/AddFriendModal';
@@ -16,6 +15,7 @@ import dynamic from 'next/dynamic';
 import LoadingModal from '@/components/modals/LoadingModal';
 import { useWebsocket } from '@/hooks/websocket/use-websocket';
 import { FriendRequestRejectedEvent, RelationshipDeletedEvent } from '@/lib/api/websockets/types';
+import { UserPlus, UserPlus2 } from 'lucide-react';
 
 const RelationShipList = dynamic(() => import('@/components/relationships/RelationShipList'), {
   ssr: false
@@ -48,6 +48,7 @@ export default function RelationShipPage() {
   const websocket = useWebsocket();
   const queryClient = useQueryClient();
   const [currentTabName, setCurrentTabName] = useState('all' as TabName);
+  // TODO: implement this
   const [crossTabRelationshipCounts, setCrossTabRelationshipCounts] = useState({
     all: 0,
     pending: 0,
@@ -117,7 +118,7 @@ export default function RelationShipPage() {
         <div className="flex items-center justify-between">
           <div className="py-4 pl-4 text-2xl font-bold text-neutral-800">Friends</div>
           <Icon onClick={onAddFriendModalOpen}>
-            <MdPersonAddAlt size={20} />
+            <UserPlus2 size={20} />
           </Icon>
         </div>
         <Tabs

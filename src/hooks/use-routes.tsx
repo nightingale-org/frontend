@@ -1,9 +1,9 @@
 import { usePathname } from 'next/navigation';
-import { HiChat } from 'react-icons/hi';
-import { HiArrowLeftOnRectangle, HiUsers } from 'react-icons/hi2';
 import { signOut } from 'next-auth/react';
 import useActiveConversationStatus from './use-active-conversation-status';
 import type { Route } from '@/@types';
+import { SIGNOUT_CALLBACK_URL } from '@/constants';
+import { LogOut, MessageSquare, Users } from 'lucide-react';
 
 const useRoutes = (): Route[] => {
   const pathname = usePathname();
@@ -21,22 +21,22 @@ const useRoutes = (): Route[] => {
     {
       label: 'Chat',
       href: '/',
-      icon: HiChat,
+      icon: MessageSquare,
       active: isPathNameEquals('/') || !!conversationId
     },
     {
       label: 'Relationships',
       href: '/relationships',
-      icon: HiUsers,
+      icon: Users,
       active: isPathNameEquals('/relationships')
     },
     {
       label: 'Logout',
       onClick: () =>
         signOut({
-          callbackUrl: 'http://localhost:8080/api/auth/logout'
+          callbackUrl: SIGNOUT_CALLBACK_URL
         }),
-      icon: HiArrowLeftOnRectangle
+      icon: LogOut
     }
   ];
 };

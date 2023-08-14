@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
 import clsx from 'clsx';
-import type { IconType } from 'react-icons/lib';
 
 type MobileItemProps = {
   active?: boolean;
-  icon: IconType;
+  icon: React.ElementType;
   href?: string;
   onClick?: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 };

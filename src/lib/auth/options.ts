@@ -25,7 +25,7 @@ export const authOptions: AuthOptions = {
     strategy: 'jwt'
   },
   callbacks: {
-    async session({ session, token, ...rest }) {
+    async session({ session, token }) {
       session.accessToken = token.access_token as string;
 
       if (session.user) {
@@ -38,7 +38,7 @@ export const authOptions: AuthOptions = {
 
       return session;
     },
-    async jwt({ token, account, trigger, session, ...rest }) {
+    async jwt({ token, account }) {
       if (account) {
         return {
           access_token: account.access_token,

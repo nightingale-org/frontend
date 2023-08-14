@@ -1,13 +1,19 @@
 import type { RelationShip } from '@/lib/api/schemas';
 import { RelationshipTypeExpanded } from '@/lib/api/schemas';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, MessageCircle, MoreVertical, XCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { memo } from 'react';
 import { updateRelationshipStatus } from '@/lib/api/query-functions';
 import { useSession } from '@/hooks/use-session';
 import { formatRelationshipType } from '@/utils/formatting';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 interface RelationshipListItemProps {
   relationship: RelationShip;
@@ -44,7 +50,7 @@ const RelationshipListItem = ({
   };
 
   return (
-    <div className="relative flex w-full cursor-pointer items-center space-x-3 rounded-lg p-3 transition hover:bg-neutral-100">
+    <div className="group relative flex w-full cursor-pointer items-center space-x-3 rounded-lg p-3 transition hover:bg-neutral-100">
       <Avatar>
         <AvatarImage src={relationship.target.image} />
         <AvatarFallback>{relationship.target.username}</AvatarFallback>
@@ -62,6 +68,39 @@ const RelationshipListItem = ({
           </div>
         </div>
       </div>
+      {relationship.type === RelationshipTypeExpanded.settled ? (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]">
+                <MessageCircle />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">Message</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <DropdownMenu>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]">
+                    <MoreVertical />
+                  </div>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <DropdownMenuContent className="w-16 text-red-500">
+                <DropdownMenuItem>
+                  <span className="text-xs">Remove friend</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <TooltipContent>
+              <p className="text-xs">More</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : null}
       {relationship.type === RelationshipTypeExpanded.ingoing_request ? (
         <div className="absolute right-4 flex gap-2">
           <TooltipProvider>

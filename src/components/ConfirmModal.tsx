@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { FiAlertTriangle } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/modals/Modal';
 import Button from '@/components/Button';
@@ -8,6 +7,7 @@ import useActiveConversationStatus from '@/hooks/use-active-conversation-status'
 import { toast } from 'react-hot-toast';
 import { del } from '@/lib/api/fetch';
 import { useSession } from '@/hooks/use-session';
+import { AlertTriangle } from 'lucide-react';
 
 interface ConfirmModalProps {
   isOpen?: boolean;
@@ -42,7 +42,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="sm:flex sm:items-start">
         <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-          <FiAlertTriangle className="h-6 w-6 text-red-600" aria-hidden="true" />
+          <AlertTriangle className="h-6 w-6 text-red-600" aria-hidden="true" />
         </div>
         <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
           <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">

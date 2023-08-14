@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { MdOutlineGroupAdd } from 'react-icons/md';
 import clsx from 'clsx';
 
 import useActiveConversationStatus from '@/hooks/use-active-conversation-status';
 import ConversationBox from './ConversationBox';
 import { Conversation, RelationShip } from '@/lib/api/schemas';
 import dynamic from 'next/dynamic';
+import { UserPlus2 } from 'lucide-react';
 
 const GroupChatModal = dynamic(() => import('@/components/modals/GroupChatModal'), { ssr: false });
 
@@ -44,7 +44,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
               onClick={() => setIsModalOpen(true)}
               className="cursor-pointer rounded-full bg-gray-100 p-2 text-gray-600 transition hover:opacity-75"
             >
-              <MdOutlineGroupAdd size={20} />
+              <UserPlus2 size={20} />
             </div>
           </div>
           {conversations.map((item) => (

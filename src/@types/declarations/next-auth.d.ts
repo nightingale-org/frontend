@@ -8,7 +8,7 @@ declare global {
       user?: {
         name: string;
         email: string;
-        image: string | null;
+        image: string;
         id: string;
         bio: string | null;
       };

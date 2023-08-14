@@ -1,11 +1,10 @@
 import clsx from 'clsx';
 import Link from 'next/link';
-import type { IconType } from 'react-icons/lib';
 
 type DesktopItemProps = {
   label: string;
   active?: boolean;
-  icon: IconType;
+  icon: React.ElementType;
   href?: string;
   onClick?: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 };
