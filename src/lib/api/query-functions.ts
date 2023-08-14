@@ -1,4 +1,4 @@
-import { type AuthorizationData, get, post, put } from '@/lib/api/fetch';
+import { type AuthorizationData, del, get, post, put } from '@/lib/api/fetch';
 import { z } from 'zod';
 import {
   Conversation,
@@ -82,19 +82,4 @@ export async function checkIfUsernameIsAvailable(
   });
 
   return !resp.exists;
-}
-
-export async function updateRelationshipStatus(
-  new_status: 'accepted' | 'ignored',
-  relationshipId: string,
-  accessToken: string
-) {
-  await post({
-    url: '/relationships/update',
-    accessToken: accessToken,
-    data: {
-      new_state: new_status,
-      relationship_id: relationshipId
-    }
-  });
 }

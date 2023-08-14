@@ -4,8 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle2, MessageCircle, MoreVertical, XCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { memo } from 'react';
-import { updateRelationshipStatus } from '@/lib/api/query-functions';
-import { useSession } from '@/hooks/use-session';
 import { formatRelationshipType } from '@/utils/formatting';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -14,10 +12,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
+import {
+  useRemoveFriend,
+  useUpdateRelationshipStatus
+} from '@/hooks/queries/use-relationships-queries';
 
 interface RelationshipListItemProps {
   relationship: RelationShip;
-  onRelationshipStatusUpdate?: (arg: RelationShip, new_status: 'ignored' | 'accepted') => void;
 }
 
 export function RelationshipListItemSkeleton() {
@@ -32,21 +44,18 @@ export function RelationshipListItemSkeleton() {
   );
 }
 
-const RelationshipListItem = ({
-  relationship,
-  onRelationshipStatusUpdate
-}: RelationshipListItemProps) => {
-  const { session } = useSession();
+const RelationshipListItem = ({ relationship }: RelationshipListItemProps) => {
+  const removeFriend = useRemoveFriend(relationship.id);
+  const updateRelationshipStatus = useUpdateRelationshipStatus(relationship.id);
 
+  const onFriendRemoval = () => {
+    removeFriend.mutate();
+  };
   const handleAcceptRequest = () => {
-    updateRelationshipStatus('accepted', relationship.id, session.accessToken).then(() =>
-      onRelationshipStatusUpdate?.(relationship, 'accepted')
-    );
+    updateRelationshipStatus.mutate('accepted');
   };
   const handleIgnoreRequest = () => {
-    updateRelationshipStatus('ignored', relationship.id, session.accessToken).then(() => {
-      onRelationshipStatusUpdate?.(relationship, 'ignored');
-    });
+    updateRelationshipStatus.mutate('ignored');
   };
 
   return (
@@ -81,20 +90,37 @@ const RelationshipListItem = ({
             </TooltipContent>
           </Tooltip>
           <Tooltip>
-            <DropdownMenu>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]">
-                    <MoreVertical />
-                  </div>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <DropdownMenuContent className="w-16 text-red-500">
-                <DropdownMenuItem>
-                  <span className="text-xs">Remove friend</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <AlertDialog>
+              <DropdownMenu>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]">
+                      <MoreVertical />
+                    </div>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <DropdownMenuContent className="w-16 text-red-500">
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem>
+                      <span className="text-xs">Remove friend</span>
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Remove {`'${relationship.target.username}'`}</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to permanently remove{' '}
+                    {`'${relationship.target.username}'`} from your friends?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={onFriendRemoval}>Remove friend</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <TooltipContent>
               <p className="text-xs">More</p>
             </TooltipContent>
@@ -136,5 +162,4 @@ const RelationshipListItem = ({
     </div>
   );
 };
-
 export default memo(RelationshipListItem);

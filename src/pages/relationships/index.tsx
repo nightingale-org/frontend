@@ -15,7 +15,7 @@ import dynamic from 'next/dynamic';
 import LoadingModal from '@/components/modals/LoadingModal';
 import { useWebsocket } from '@/hooks/websocket/use-websocket';
 import { FriendRequestRejectedEvent, RelationshipDeletedEvent } from '@/lib/api/websockets/types';
-import { UserPlus, UserPlus2 } from 'lucide-react';
+import { UserPlus2 } from 'lucide-react';
 
 const RelationShipList = dynamic(() => import('@/components/relationships/RelationShipList'), {
   ssr: false
