@@ -358,7 +358,8 @@ async function parseResponseBody(response: Response): Promise<unknown> {
   if (
     contentType !== null &&
     contentType.indexOf('json') > -1 &&
-    (response.status === 200 || response.status === 201)
+    response.status < 500 &&
+    response.status >= 200
   ) {
     return await response.json();
   }

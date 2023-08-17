@@ -1,10 +1,10 @@
 import { cn } from '@/utils/css-class-merge';
 import { useEffect, useState } from 'react';
-import useResizeObserver from '@/hooks/use-resize-observer';
 
 type RelationshipListSkeletonProps = {
   containerRef: React.RefObject<HTMLDivElement>;
   renderSkeleton: (key: number) => React.ReactElement;
+  className?: string;
 };
 
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -16,22 +16,25 @@ function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
   );
 }
 
-function SkeletonContainer({ containerRef, renderSkeleton }: RelationshipListSkeletonProps) {
+function SkeletonContainer({
+  containerRef,
+  renderSkeleton,
+  className
+}: RelationshipListSkeletonProps) {
   const [numberOfSkeletons, setNumberOfSkeletons] = useState(0);
+
   useEffect(() => {
     if (containerRef.current === null) {
       return;
     }
 
-    setNumberOfSkeletons(Math.floor(containerRef.current.clientHeight / 70));
+    // TODO: we don't know for sure what is the height of the skeleton.
+    // Pre-render a skeleton one time to get it's sizes might be a good idea, consider later.
+    setNumberOfSkeletons(Math.floor(containerRef.current.clientHeight / 60));
   }, []);
 
-  useResizeObserver(containerRef, (entry) => {
-    setNumberOfSkeletons(Math.floor(entry.contentRect.height / 70));
-  });
-
   return (
-    <div className="mt-1 flex flex-col gap-1 p-3">
+    <div className={className}>
       {[...Array(numberOfSkeletons)].map((_, index) => renderSkeleton(index))}
     </div>
   );

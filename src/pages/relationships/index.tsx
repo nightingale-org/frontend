@@ -4,7 +4,7 @@ import { getRelationships } from '@/lib/api/query-functions';
 import { GetServerSideProps } from 'next';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query';
+import { dehydrate, useQueryClient } from '@tanstack/react-query';
 import type { DehydratedProps } from '@/@types';
 import { queryKeys } from '@/lib/api/query-keys';
 import { foldRelationshipType, RelationShip, RelationshipType } from '@/lib/api/schemas';
@@ -16,6 +16,8 @@ import LoadingModal from '@/components/modals/LoadingModal';
 import { useWebsocket } from '@/hooks/websocket/use-websocket';
 import { FriendRequestRejectedEvent, RelationshipDeletedEvent } from '@/lib/api/websockets/types';
 import { UserPlus2 } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { createQueryClient } from '@/lib/api/query-client';
 
 const RelationShipList = dynamic(() => import('@/components/relationships/RelationShipList'), {
   ssr: false
@@ -30,10 +32,14 @@ const tabToEnumMapping = {
 type TabName = 'all' | 'pending' | 'blocked';
 
 export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ctx) => {
-  const queryClient = new QueryClient();
+  const queryClient = createQueryClient();
+
+  const relationshipType = ctx.query.tab
+    ? tabToEnumMapping[ctx.query.tab as TabName]
+    : RelationshipType.settled;
 
   await queryClient.prefetchQuery(queryKeys.relationshipsList(RelationshipType.settled), () =>
-    getRelationships({ ctx, type: RelationshipType.settled })
+    getRelationships({ ctx, type: relationshipType })
   );
 
   return {
@@ -47,23 +53,23 @@ export default function RelationShipPage() {
   const [isAddFriendModalOpened, setIsAddFriendModalOpened] = useState(false);
   const websocket = useWebsocket();
   const queryClient = useQueryClient();
-  const [currentTabName, setCurrentTabName] = useState('all' as TabName);
-  // TODO: implement this
-  const [crossTabRelationshipCounts, setCrossTabRelationshipCounts] = useState({
-    all: 0,
-    pending: 0,
-    blocked: 0
-  } as Record<TabName, number>);
+  const router = useRouter();
+  const [currentTabName, setCurrentTabName] = useState(
+    (typeof router.query.tab === 'string'
+      ? Object.keys(tabToEnumMapping).includes(router.query.tab)
+        ? router.query.tab
+        : 'all'
+      : 'all') as TabName
+  );
 
   const onTabChange = useCallback(
     (newTab: string) => {
-      setCurrentTabName(newTab as TabName);
-
-      if (!websocket) return;
-
-      websocket.emit(`relationship:events_seen`, { type: tabToEnumMapping[newTab] });
+      router.push(`/relationships?tab=${newTab}`, undefined, { shallow: true }).then(() => {
+        setCurrentTabName(newTab as TabName);
+        websocket?.emit(`relationship:events_seen`, { type: tabToEnumMapping[newTab] });
+      });
     },
-    [websocket]
+    [websocket, router]
   );
 
   useEffect(() => {
@@ -74,7 +80,9 @@ export default function RelationShipPage() {
     const onNewRelationship = (relationship: RelationShip) => {
       queryClient.setQueryData(
         queryKeys.relationshipsList(foldRelationshipType(relationship.type)),
-        (oldRelationships: RelationShip[]) => {
+        (oldRelationships?: RelationShip[]) => {
+          if (!oldRelationships) return [relationship];
+
           return [relationship, ...oldRelationships];
         }
       );
@@ -83,13 +91,13 @@ export default function RelationShipPage() {
     const onRelationshipDelete = ({ type, relationship_id }: RelationshipDeletedEvent) => {
       queryClient.setQueryData(
         queryKeys.relationshipsList(foldRelationshipType(type)),
-        (old: RelationShip[]) => old.filter((r) => r.id !== relationship_id)
+        (old?: RelationShip[]) => old?.filter((r) => r.id !== relationship_id)
       );
     };
 
     const onFriendRequestReject = ({ relationship_id, type }: FriendRequestRejectedEvent) => {
-      queryClient.setQueryData(queryKeys.relationshipsList(type), (old: RelationShip[]) =>
-        old.filter((r) => r.id !== relationship_id)
+      queryClient.setQueryData(queryKeys.relationshipsList(type), (old?: RelationShip[]) =>
+        old?.filter((r) => r.id !== relationship_id)
       );
     };
 

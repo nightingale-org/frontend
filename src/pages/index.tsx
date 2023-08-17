@@ -1,23 +1,33 @@
 import { GetServerSideProps } from 'next';
-import { type Conversation, type RelationShip, RelationshipType } from '@/lib/api/schemas';
-import { getConversations, getRelationships } from '@/lib/api/query-functions';
+import { RelationshipType } from '@/lib/api/schemas';
+import { getConversationPreviews, getRelationships } from '@/lib/api/query-functions';
 import { Layout } from '@/layouts';
-import ConversationList from '@/components/ConversationList';
+import ConversationList from '@/components/conversations/ConversationList';
 import LoadingModal from '@/components/modals/LoadingModal';
+import { dehydrate } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/api/query-keys';
+import type { DehydratedProps } from '@/@types';
+import { createQueryClient } from '@/lib/api/query-client';
 
-type ConversationLayoutProps = {
-  relationships: RelationShip[];
-  conversations: Conversation[];
+export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ctx) => {
+  const queryClient = createQueryClient();
+
+  await Promise.all([
+    queryClient.prefetchQuery(queryKeys.relationshipsList(RelationshipType.settled), () =>
+      getRelationships({ ctx })
+    ),
+    queryClient.prefetchQuery(queryKeys.conversationsList(), () => getConversationPreviews({ ctx }))
+  ]);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient)
+    }
+  };
 };
 
-export default function Home({ relationships, conversations }: ConversationLayoutProps) {
-  return (
-    <ConversationList
-      relationships={relationships}
-      title="Messages"
-      conversations={conversations}
-    />
-  );
+export default function Home() {
+  return <ConversationList />;
 }
 
 Home.getLayout = (page) => {
@@ -25,18 +35,4 @@ Home.getLayout = (page) => {
 };
 Home.auth = {
   loader: <LoadingModal />
-};
-
-export const getServerSideProps: GetServerSideProps<ConversationLayoutProps> = async (context) => {
-  const [conversations, relationships] = await Promise.all([
-    getConversations({ ctx: context }),
-    getRelationships({ ctx: context, type: RelationshipType.settled })
-  ]);
-
-  return {
-    props: {
-      conversations,
-      relationships
-    }
-  };
 };

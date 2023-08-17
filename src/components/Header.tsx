@@ -2,7 +2,7 @@ import { HiChevronLeft } from 'react-icons/hi';
 import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Conversation } from '@/lib/api/schemas';
+import { ConversationPreview } from '@/lib/api/schemas';
 
 import useOtherUser from '@/hooks/useOtherUser';
 import useActiveList from '@/hooks/useActiveList';
@@ -12,7 +12,7 @@ import ProfileDrawer from './ProfileDrawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface HeaderProps {
-  conversation: Conversation;
+  conversation: ConversationPreview;
 }
 
 const Header: React.FC<HeaderProps> = ({ conversation }) => {

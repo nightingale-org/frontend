@@ -1,42 +1,17 @@
-import { type AuthorizationData, del, get, post, put } from '@/lib/api/fetch';
+import { type AuthorizationData, get, post } from '@/lib/api/fetch';
 import { z } from 'zod';
 import {
-  Conversation,
-  ConversationSchema,
+  ConversationPreviewSchema,
   ExistsResponseSchema,
   RelationShipSchema,
   RelationshipType,
   UserSchema
 } from '@/lib/api/schemas';
 
-export async function getConversationById(id: string, { ctx, accessToken }: AuthorizationData) {
-  return await get<Conversation>({
-    url: `/conversations/${id}`,
-    validationModel: ConversationSchema,
-    // TODO: fix types
-    ctx: ctx as any,
-    accessToken: accessToken as any
-  });
-}
-
-export async function addToFriends(username: string, { ctx, accessToken }: AuthorizationData) {
-  return await put({
-    url: '/relationships',
-    data: {
-      username: username
-    },
-    accessToken: accessToken as any,
-    ctx: ctx as any,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-}
-
-export async function getConversations({ ctx, accessToken }: AuthorizationData) {
+export async function getConversationPreviews({ ctx, accessToken }: AuthorizationData) {
   return await get({
     url: `/conversations`,
-    validationModel: z.array(ConversationSchema),
+    validationModel: z.array(ConversationPreviewSchema),
     // TODO: fix types
     ctx: ctx as any,
     accessToken: accessToken as any

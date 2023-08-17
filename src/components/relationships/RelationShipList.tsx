@@ -1,4 +1,4 @@
-import { useRelationshipsQueries } from '@/hooks/queries/use-relationships-queries';
+import { useGetRelationships } from '@/hooks/queries/use-relationship-relationships';
 import { RelationshipType } from '@/lib/api/schemas';
 import { SearchBar } from '@/components/ui/search-bar';
 import RelationshipListItem, {
@@ -13,7 +13,7 @@ type RelationShipListProps = {
 };
 
 function RelationShipList({ type }: RelationShipListProps) {
-  const { data: relationships, status } = useRelationshipsQueries(type);
+  const { data: relationships, status } = useGetRelationships(type);
   const [searchQuery, setSearchQuery] = useState('');
   const divContainerRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +35,7 @@ function RelationShipList({ type }: RelationShipListProps) {
       <ScrollArea className="mt-1 flex-1" ref={divContainerRef}>
         {status === 'loading' ? (
           <SkeletonContainer
+            className="flex flex-col gap-1 p-3"
             containerRef={divContainerRef}
             renderSkeleton={(key) => <RelationshipListItemSkeleton key={key} />}
           />

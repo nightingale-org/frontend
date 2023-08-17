@@ -2,14 +2,13 @@ import Modal from '@/components/modals/Modal';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useSession } from '@/hooks/use-session';
 import { BadRequestError } from '@/lib/api/fetch/errors';
 import { useToast } from '@/hooks/use-toast';
 import { USERNAME_VALIDATOR } from '@/utils/validation';
 import { Label } from '@/components/ui/label';
-import { addToFriends } from '@/lib/api/query-functions';
 import { cn } from '@/utils/css-class-merge';
 import { z } from 'zod';
+import { useAddToFriends } from '@/hooks/queries/use-relationship-relationships';
 
 interface InProps {
   isOpen: boolean;
@@ -17,10 +16,18 @@ interface InProps {
 }
 
 export default function AddFriendModal({ isOpen, onClose }: InProps) {
-  const { session } = useSession();
   const { toast } = useToast();
   const [username, setUsername] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const addToFriends = useAddToFriends({
+    onSuccess: () => {
+      toast({
+        title: `Friend request to ${username} was sent.`
+        // action: TODO: make undo
+      });
+      onModalClose();
+    }
+  });
 
   const buttonDisabled = Boolean(errorMessage) || username === '';
 
@@ -48,23 +55,16 @@ export default function AddFriendModal({ isOpen, onClose }: InProps) {
     setErrorMessage('');
   };
 
-  const onClick = () => {
-    addToFriends(username, { accessToken: session.accessToken })
-      .then(() => {
-        toast({
-          title: `Friend request to ${username} was sent.`
-          // action: TODO: make undo
-        });
-        onModalClose();
-      })
-      .catch((e) => {
+  const onClick = () =>
+    addToFriends.mutate(username, {
+      onError: (e) => {
         if (e instanceof BadRequestError) {
           setErrorMessage(e.data.detail);
         } else {
           setErrorMessage('Unknown error. Please try again later.');
         }
-      });
-  };
+      }
+    });
 
   return (
     <Modal isOpen={isOpen} onClose={onModalClose}>

@@ -54,18 +54,22 @@ export const MessageSchema = z.object({
 });
 export type Message = z.infer<typeof MessageSchema>;
 
-export const ConversationSchema = z.object({
+const MessagePreview = z.object({
   id: z.string(),
+  text: z.string(),
   created_at: z.string().datetime(),
-  last_message_at: z.date().nullable(),
-  name: z.string().nullable(),
-  user_limit: z.number().nullable(),
-  members: z.array(UserSchema),
-  messages: z.array(MessageSchema),
-  is_group: z.boolean()
+  author: UserSchema
 });
 
-export type Conversation = z.infer<typeof ConversationSchema>;
+export const ConversationPreviewSchema = z.object({
+  id: z.string(),
+  created_at: z.string().datetime(),
+  name: z.string().nullable(),
+  user_limit: z.number().nullable(),
+  last_message: MessagePreview.nullable()
+});
+
+export type ConversationPreview = z.infer<typeof ConversationPreviewSchema>;
 
 export const RelationShipSchema = z.object({
   id: z.string(),

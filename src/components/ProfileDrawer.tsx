@@ -9,12 +9,12 @@ import useActiveList from '@/hooks/useActiveList';
 import Avatar from '@/components/Avatar';
 import AvatarGroup from '@/components/AvatarGroup';
 import ConfirmModal from './ConfirmModal';
-import { Conversation } from '@/lib/api/schemas';
+import { ConversationPreview } from '@/lib/api/schemas';
 
 interface ProfileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  conversation: Conversation;
+  conversation: ConversationPreview;
 }
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, conversation }) => {

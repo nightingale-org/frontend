@@ -7,18 +7,19 @@ import Select from '../inputs/Select';
 import Modal from './Modal';
 import Button from '../Button';
 import { toast } from 'react-hot-toast';
-import { RelationShip } from '@/lib/api/schemas';
+import { RelationshipType } from '@/lib/api/schemas';
 import { post } from '@/lib/api/fetch';
+import { useGetRelationships } from '@/hooks/queries/use-relationship-relationships';
 
 interface GroupChatModalProps {
   isOpen?: boolean;
   onClose: () => void;
-  relationships: RelationShip[];
 }
 
-const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, relationships }) => {
+const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { data: relationships } = useGetRelationships(RelationshipType.settled);
 
   const {
     register,

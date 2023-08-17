@@ -4,9 +4,10 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import { NextPage } from 'next';
 import { inter } from '@/lib/fonts';
 import { Suspense, useEffect, useState } from 'react';
-import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import dynamic from 'next/dynamic';
+import { createQueryClient } from '@/lib/api/query-client';
 
 export type NextPageWithLayoutAndAuth<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactElement;
@@ -31,16 +32,7 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps }
 }: AppPropsWithLayout) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false
-          }
-        }
-      })
-  );
+  const [queryClient] = useState(createQueryClient);
   const [showDevtools, setShowDevtools] = useState(false);
 
   useEffect(() => {

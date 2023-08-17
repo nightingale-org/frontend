@@ -1,11 +1,11 @@
 import { useSession } from '@/hooks/use-session';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/api/query-keys';
 import { getRelationships } from '@/lib/api/query-functions';
 import { RelationShip, RelationshipType } from '@/lib/api/schemas';
-import { del, post } from '@/lib/api/fetch';
+import { del, post, put } from '@/lib/api/fetch';
 
-export function useRelationshipsQueries(type: RelationshipType) {
+export function useGetRelationships(type: RelationshipType) {
   const {
     session: { accessToken }
   } = useSession();
@@ -75,5 +75,26 @@ export function useUpdateRelationshipStatus(relationshipId: string) {
         }
       );
     }
+  });
+}
+
+export function useAddToFriends(
+  options?: Exclude<UseMutationOptions<unknown, unknown, string>, 'mutationFn'>
+) {
+  const {
+    session: { accessToken }
+  } = useSession();
+
+  return useMutation<unknown, unknown, string, unknown>({
+    mutationFn: async (username: string) => {
+      return await put({
+        url: '/relationships',
+        data: {
+          username: username
+        },
+        accessToken: accessToken
+      });
+    },
+    ...options
   });
 }
