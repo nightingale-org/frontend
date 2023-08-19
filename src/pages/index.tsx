@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { RelationshipType } from '@/lib/api/schemas';
-import { getConversationPreviews, getRelationships } from '@/lib/api/query-functions';
+import { getConversationPreviews } from '@/lib/api/query-functions';
 import { Layout } from '@/layouts';
 import ConversationList from '@/components/conversations/ConversationList';
 import LoadingModal from '@/components/modals/LoadingModal';
@@ -12,12 +11,9 @@ import { createQueryClient } from '@/lib/api/query-client';
 export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ctx) => {
   const queryClient = createQueryClient();
 
-  await Promise.all([
-    queryClient.prefetchQuery(queryKeys.relationshipsList(RelationshipType.settled), () =>
-      getRelationships({ ctx })
-    ),
-    queryClient.prefetchQuery(queryKeys.conversationsList(), () => getConversationPreviews({ ctx }))
-  ]);
+  void queryClient.prefetchInfiniteQuery(queryKeys.conversationsList(), async () => {
+    return await getConversationPreviews({ ctx });
+  });
 
   return {
     props: {

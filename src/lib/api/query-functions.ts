@@ -1,17 +1,26 @@
 import { type AuthorizationData, get, post } from '@/lib/api/fetch';
 import { z } from 'zod';
 import {
-  ConversationPreviewSchema,
+  ConversationPreviewSchemaPaginated,
   ExistsResponseSchema,
   RelationShipSchema,
   RelationshipType,
   UserSchema
 } from '@/lib/api/schemas';
 
-export async function getConversationPreviews({ ctx, accessToken }: AuthorizationData) {
+export async function getConversationPreviews({
+  ctx,
+  accessToken,
+  nextCursor
+}: AuthorizationData & { nextCursor?: string }) {
+  let url = '/conversations';
+  if (nextCursor) {
+    url = `${url}?next_cursor=${nextCursor}`;
+  }
+
   return await get({
-    url: `/conversations`,
-    validationModel: z.array(ConversationPreviewSchema),
+    url,
+    validationModel: ConversationPreviewSchemaPaginated,
     // TODO: fix types
     ctx: ctx as any,
     accessToken: accessToken as any

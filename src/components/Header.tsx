@@ -2,7 +2,7 @@ import { HiChevronLeft } from 'react-icons/hi';
 import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ConversationPreview } from '@/lib/api/schemas';
+import type { ConversationPreview } from '@/lib/api/schemas';
 
 import useOtherUser from '@/hooks/useOtherUser';
 import useActiveList from '@/hooks/useActiveList';

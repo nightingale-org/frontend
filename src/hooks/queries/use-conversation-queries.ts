@@ -1,13 +1,16 @@
 import { useSession } from '@/hooks/use-session';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/api/query-keys';
 import { getConversationPreviews } from '@/lib/api/query-functions';
 
 export function useGetConversationsPreviews() {
   const { session } = useSession();
 
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: queryKeys.conversationsList(),
-    queryFn: () => getConversationPreviews({ accessToken: session.accessToken })
+    queryFn: async ({ pageParam: nextCursor }) => {
+      return await getConversationPreviews({ accessToken: session.accessToken, nextCursor });
+    },
+    getNextPageParam: (lastPage) => lastPage.next_cursor
   });
 }

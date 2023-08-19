@@ -26,6 +26,14 @@ export const foldRelationshipType = (type: RelationshipTypeExpanded): Relationsh
   }
 };
 
+export const PaginatedResponseSchema = <T extends z.ZodTypeAny>(schema: T) => {
+  return z.object({
+    data: z.array(schema),
+    has_more: z.boolean(),
+    next_cursor: z.string().nullable()
+  });
+};
+
 export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),
@@ -66,10 +74,17 @@ export const ConversationPreviewSchema = z.object({
   created_at: z.string().datetime(),
   name: z.string().nullable(),
   user_limit: z.number().nullable(),
-  last_message: MessagePreview.nullable()
+  last_message: MessagePreview.nullable(),
+  last_message_seen: z.boolean(),
+  is_group: z.boolean(),
+  avatar_url: z.string().url().nullable()
 });
 
+export const ConversationPreviewSchemaPaginated =
+  PaginatedResponseSchema(ConversationPreviewSchema);
+
 export type ConversationPreview = z.infer<typeof ConversationPreviewSchema>;
+export type ConversationPreviewSchemaPaginated = z.infer<typeof ConversationPreviewSchemaPaginated>;
 
 export const RelationShipSchema = z.object({
   id: z.string(),
