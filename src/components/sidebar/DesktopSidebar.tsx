@@ -1,5 +1,5 @@
 import DesktopItem from './DesktopItem';
-import useRoutes from '@/hooks/use-routes.tsx';
+import useRoutes from '@/hooks/use-routes';
 import SettingsModal from '../modals/SettingsModal';
 import { useSession } from '@/hooks/use-session';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
