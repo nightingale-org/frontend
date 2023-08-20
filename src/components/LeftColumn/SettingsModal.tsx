@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import Modal from './Modal';
+import Modal from '@/components/common/modals/Modal';
 import { toast } from 'react-hot-toast';
 import { post } from '@/lib/api/fetch';
 import { useSession } from '@/hooks/use-session';
@@ -27,7 +27,7 @@ import { MAX_LENGTH_OF_BIO } from '@/constants';
 import { AvatarEditable } from '@/components/ui/avatar';
 import { USERNAME_VALIDATOR } from '@/utils/validation';
 
-const CropModal = dynamic(() => import('@/components/modals/CropModal'));
+const CropModal = dynamic(() => import('@/components/common/modals/CropModal'));
 
 interface SettingsModalProps {
   isOpen?: boolean;

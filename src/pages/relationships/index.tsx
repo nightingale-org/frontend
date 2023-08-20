@@ -8,20 +8,23 @@ import { dehydrate, useQueryClient } from '@tanstack/react-query';
 import type { DehydratedProps } from '@/@types';
 import { queryKeys } from '@/lib/api/query-keys';
 import { foldRelationshipType, RelationShip, RelationshipType } from '@/lib/api/schemas';
-import { Icon } from '@/components/ui/icon';
 import { createPortal } from 'react-dom';
-import AddFriendModal from '@/components/AddFriendModal';
+import AddFriendModal from '@/components/LeftColumn/relationships/AddFriendModal';
 import dynamic from 'next/dynamic';
-import LoadingModal from '@/components/modals/LoadingModal';
 import { useWebsocket } from '@/hooks/websocket/use-websocket';
 import { FriendRequestRejectedEvent, RelationshipDeletedEvent } from '@/lib/api/websockets/types';
-import { UserPlus2 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { createQueryClient } from '@/lib/api/query-client';
+import Aside from '@/components/LeftColumn/Aside';
+import { UserPlus2 } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 
-const RelationShipList = dynamic(() => import('@/components/relationships/RelationShipList'), {
-  ssr: false
-});
+const RelationShipList = dynamic(
+  () => import('@/components/LeftColumn/relationships/RelationShipList'),
+  {
+    ssr: false
+  }
+);
 
 const tabToEnumMapping = {
   all: RelationshipType.settled,
@@ -121,56 +124,49 @@ export default function RelationShipPage() {
   };
 
   return (
-    <aside className="fixed inset-y-0 left-0 w-full overflow-y-auto border-r border-gray-200 pb-20 lg:left-20 lg:block lg:w-80 lg:pb-0">
-      <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between">
-          <div className="py-4 pl-4 text-2xl font-bold text-neutral-800">Friends</div>
-          <Icon onClick={onAddFriendModalOpen}>
-            <UserPlus2 size={20} />
-          </Icon>
-        </div>
-        <Tabs
-          onValueChange={onTabChange}
-          value={currentTabName}
-          defaultValue="all"
-          className="flex flex-1 flex-col px-0.5"
-        >
-          <TabsList className="w-full justify-stretch bg-inherit">
-            <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="all">
-              <span className="text-base font-medium">All</span>
-            </TabsTrigger>
-            <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="pending">
-              <span className="text-base font-medium">Pending</span>
-            </TabsTrigger>
-            <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="blocked">
-              <span className="text-base font-medium">Blocked</span>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent className="h-full" value="all">
-            <RelationShipList type={RelationshipType.settled} />
-          </TabsContent>
-          <TabsContent className="h-full" value="pending">
-            <RelationShipList type={RelationshipType.pending} />
-          </TabsContent>
-          <TabsContent className="h-full" value="blocked">
-            <RelationShipList type={RelationshipType.blocked} />
-          </TabsContent>
-        </Tabs>
-        {
-          // TODO: Consider moving createPortal inside the component
-          createPortal(
-            <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />,
-            document.body
-          )
-        }
-      </div>
-    </aside>
+    <Aside className="relative" name="Friends">
+      <Icon className="absolute right-0 top-4" onClick={onAddFriendModalOpen}>
+        <UserPlus2 size={20} />
+      </Icon>
+      <Tabs
+        onValueChange={onTabChange}
+        value={currentTabName}
+        defaultValue="all"
+        className="flex flex-1 flex-col px-0.5"
+      >
+        <TabsList className="w-full justify-stretch bg-inherit">
+          <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="all">
+            <span className="text-base font-medium">All</span>
+          </TabsTrigger>
+          <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="pending">
+            <span className="text-base font-medium">Pending</span>
+          </TabsTrigger>
+          <TabsTrigger className="flex-1 data-[state=active]:bg-slate-100" value="blocked">
+            <span className="text-base font-medium">Blocked</span>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent className="h-full" value="all">
+          <RelationShipList type={RelationshipType.settled} />
+        </TabsContent>
+        <TabsContent className="h-full" value="pending">
+          <RelationShipList type={RelationshipType.pending} />
+        </TabsContent>
+        <TabsContent className="h-full" value="blocked">
+          <RelationShipList type={RelationshipType.blocked} />
+        </TabsContent>
+      </Tabs>
+      {
+        // TODO: Consider moving createPortal inside the component
+        createPortal(
+          <AddFriendModal isOpen={isAddFriendModalOpened} onClose={onAddFriendModalClose} />,
+          document.body
+        )
+      }
+    </Aside>
   );
 }
 
 RelationShipPage.getLayout = (page) => {
   return <Layout.Default>{page}</Layout.Default>;
 };
-RelationShipPage.auth = {
-  loader: <LoadingModal />
-};
+RelationShipPage.auth = {};

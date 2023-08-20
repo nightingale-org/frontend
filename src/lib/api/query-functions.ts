@@ -1,6 +1,7 @@
 import { type AuthorizationData, get, post } from '@/lib/api/fetch';
 import { z } from 'zod';
 import {
+  ConversationPreviewSchema,
   ConversationPreviewSchemaPaginated,
   ExistsResponseSchema,
   RelationShipSchema,
@@ -21,6 +22,20 @@ export async function getConversationPreviews({
   return await get({
     url,
     validationModel: ConversationPreviewSchemaPaginated,
+    // TODO: fix types
+    ctx: ctx as any,
+    accessToken: accessToken as any
+  });
+}
+
+export async function getConversationPreviewById({
+  id,
+  ctx,
+  accessToken
+}: AuthorizationData & { id: string }) {
+  return await get({
+    url: `/conversations/${id}`,
+    validationModel: ConversationPreviewSchema,
     // TODO: fix types
     ctx: ctx as any,
     accessToken: accessToken as any

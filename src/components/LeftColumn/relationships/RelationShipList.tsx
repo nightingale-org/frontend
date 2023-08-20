@@ -1,12 +1,11 @@
 import { useGetRelationships } from '@/hooks/queries/use-relationship-relationships';
 import { RelationshipType } from '@/lib/api/schemas';
 import { SearchBar } from '@/components/ui/search-bar';
-import RelationshipListItem, {
-  RelationshipListItemSkeleton
-} from '@/components/relationships/RelationshipListItem';
+import RelationshipListItem from '@/components/LeftColumn/relationships/RelationshipListItem';
 import { memo, useCallback, useRef, useState } from 'react';
 import { SkeletonContainer } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import UserBoxSkeleton from '@/components/common/UserBoxSkeleton';
 
 type RelationShipListProps = {
   type: RelationshipType;
@@ -23,21 +22,20 @@ function RelationShipList({ type }: RelationShipListProps) {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <div className="px-3">
-        <SearchBar
-          className="h-9"
-          value={searchQuery}
-          type="text"
-          placeholder="Search"
-          onChange={onSearchQueryChange}
-        />
-      </div>
+      <SearchBar
+        className="h-9"
+        wrapperClassName="mx-2"
+        value={searchQuery}
+        type="text"
+        placeholder="Search"
+        onChange={onSearchQueryChange}
+      />
       <ScrollArea className="mt-1 flex-1" ref={divContainerRef}>
         {status === 'loading' ? (
           <SkeletonContainer
             className="flex flex-col gap-1 p-3"
             containerRef={divContainerRef}
-            renderSkeleton={(key) => <RelationshipListItemSkeleton key={key} />}
+            renderSkeleton={(key) => <UserBoxSkeleton key={key} />}
           />
         ) : (
           <>

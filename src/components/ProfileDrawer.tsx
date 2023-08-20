@@ -7,8 +7,8 @@ import useOtherUser from '@/hooks/useOtherUser';
 import useActiveList from '@/hooks/useActiveList';
 
 import Avatar from '@/components/Avatar';
-import AvatarGroup from '@/components/AvatarGroup';
-import ConfirmModal from './ConfirmModal';
+import AvatarGroup from '@/components/common/AvatarGroup';
+import ConfirmModal from '@/components/common/modals/ConfirmModal';
 import type { ConversationPreview } from '@/lib/api/schemas';
 
 interface ProfileDrawerProps {

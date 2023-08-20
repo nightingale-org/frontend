@@ -1,4 +1,4 @@
-import Modal from '@/components/modals/Modal';
+import Modal from '@/components/common/modals/Modal';
 import Image from 'next/image';
 
 interface ImageModalProps {

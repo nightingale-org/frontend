@@ -1,7 +1,7 @@
 import { useSession as useNextAuthSession } from 'next-auth/react';
 import type { Session } from 'next-auth';
 
-type UpdateSession = (data?: any) => Promise<Session | null>;
+type UpdateSession = (data?: unknown) => Promise<Session | null>;
 type UseSessionReturnType = { session: Required<Session>; update: UpdateSession };
 
 export function useSession(): UseSessionReturnType {

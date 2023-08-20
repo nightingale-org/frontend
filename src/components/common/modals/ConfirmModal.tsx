@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { useRouter } from 'next/navigation';
-import Modal from '@/components/modals/Modal';
+import Modal from '@/components/common/modals/Modal';
 import Button from '@/components/Button';
-import useActiveConversationStatus from '@/hooks/use-active-conversation-status';
+import useConversationId from '@/hooks/use-conversation-id';
 import { toast } from 'react-hot-toast';
 import { del } from '@/lib/api/fetch';
 import { useSession } from '@/hooks/use-session';
@@ -16,7 +16,7 @@ interface ConfirmModalProps {
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  const { conversationId } = useActiveConversationStatus();
+  const conversationId = useConversationId();
   const [isLoading, setIsLoading] = useState(false);
   const { session } = useSession();
 

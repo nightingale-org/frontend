@@ -4,13 +4,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'GET') return res.status(405).end();
 
   let ip = '';
-  let forwarded_for = req.headers['x-forwarded-for'];
+  const forwarded_for = req.headers['x-forwarded-for'];
   if (forwarded_for && typeof forwarded_for === 'string') {
     ip = forwarded_for.split(',')[0];
   }
 
   if (req.headers.host) {
-    console.log(req.headers['x-forwarded-proto']);
     const proto = req.headers['x-forwarded-proto'] ?? 'https';
     ip = `${proto}://${req.headers.host}`;
   }

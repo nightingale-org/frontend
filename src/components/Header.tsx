@@ -7,7 +7,7 @@ import type { ConversationPreview } from '@/lib/api/schemas';
 import useOtherUser from '@/hooks/useOtherUser';
 import useActiveList from '@/hooks/useActiveList';
 
-import AvatarGroup from '@/components/AvatarGroup';
+import AvatarGroup from '@/components/common/AvatarGroup';
 import ProfileDrawer from './ProfileDrawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 

@@ -62,22 +62,27 @@ export const MessageSchema = z.object({
 });
 export type Message = z.infer<typeof MessageSchema>;
 
-const MessagePreview = z.object({
+export const MessagePreviewSchema = z.object({
   id: z.string(),
   text: z.string(),
   created_at: z.string().datetime(),
   author: UserSchema
 });
+export type MessagePreview = z.infer<typeof MessagePreviewSchema>;
 
 export const ConversationPreviewSchema = z.object({
   id: z.string(),
   created_at: z.string().datetime(),
   name: z.string().nullable(),
   user_limit: z.number().nullable(),
-  last_message: MessagePreview.nullable(),
+  last_message: MessagePreviewSchema.nullable(),
   last_message_seen: z.boolean(),
   is_group: z.boolean(),
-  avatar_url: z.string().url().nullable()
+  avatar_url: z
+    .string()
+    .url()
+    .nullable()
+    .transform((val) => val || AVATAR_PLACEHOLDER_SRC)
 });
 
 export const ConversationPreviewSchemaPaginated =

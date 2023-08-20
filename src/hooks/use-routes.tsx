@@ -1,13 +1,13 @@
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import useActiveConversationStatus from './use-active-conversation-status';
+import useConversationId from './use-conversation-id';
 import type { Route } from '@/@types';
 import { SIGNOUT_CALLBACK_URL } from '@/constants';
 import { LogOut, MessageSquare, Users } from 'lucide-react';
 
 const useRoutes = (): Route[] => {
   const pathname = usePathname();
-  const { conversationId } = useActiveConversationStatus();
+  const conversationId = useConversationId();
 
   const isPathNameEquals = (href: string) => {
     if (pathname.length > 1 && pathname.charAt(pathname.length - 1) === '/') {

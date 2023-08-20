@@ -1,17 +1,17 @@
-import useActiveConversationStatus from '@/hooks/use-active-conversation-status';
+import useConversationId from '@/hooks/use-conversation-id';
 import useRoutes from '@/hooks/use-routes';
 import MobileItem from './MobileItem';
 import { useModal } from '@/hooks/use-modal';
-import SettingsModal from '@/components/modals/SettingsModal';
+import SettingsModal from '@/components/LeftColumn/SettingsModal';
 import { Settings } from 'lucide-react';
 import type { Route } from '@/@types';
 
 const MobileFooter = () => {
   const routes = useRoutes();
-  const { isOpen: isInConversation } = useActiveConversationStatus();
+  const conversationId = useConversationId();
   const [isOpen, onModalOpen, onModalClose] = useModal();
 
-  if (isInConversation) {
+  if (conversationId) {
     return null;
   }
 

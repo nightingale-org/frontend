@@ -1,16 +1,17 @@
 import * as React from 'react';
+import { useRef } from 'react';
 
 import { cn } from '@/utils/css-class-merge';
 import { Search, X } from 'lucide-react';
 import { mergeRefs } from '@/utils/react';
-import { useRef } from 'react';
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   onChange?: (newValue: string) => void | Promise<void>;
+  wrapperClassName?: string;
 }
 
 const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, value, onChange, ...props }, ref) => {
+  ({ className, type, value, onChange, wrapperClassName, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const onInputClear = () => {
       onChange?.('');
@@ -22,7 +23,7 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div className="relative flex items-center justify-center">
+      <div className={cn('relative flex items-center justify-center', wrapperClassName)}>
         <Search className="pointer-events-none absolute left-3" />
         <input
           type={type}

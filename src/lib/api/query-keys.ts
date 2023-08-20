@@ -6,5 +6,8 @@ export const queryKeys = {
   },
   conversationsList: () => {
     return ['conversations'];
+  },
+  conversationById: (conversationId: string) => {
+    return ['conversations', conversationId];
   }
 };

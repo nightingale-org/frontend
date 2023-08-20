@@ -1,8 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { getConversationPreviews } from '@/lib/api/query-functions';
 import { Layout } from '@/layouts';
-import ConversationList from '@/components/conversations/ConversationList';
-import LoadingModal from '@/components/modals/LoadingModal';
+import ConversationList from '@/components/LeftColumn/conversations/ConversationList';
 import { dehydrate } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/api/query-keys';
 import type { DehydratedProps } from '@/@types';
@@ -29,6 +28,4 @@ export default function Home() {
 Home.getLayout = (page) => {
   return <Layout.Default>{page}</Layout.Default>;
 };
-Home.auth = {
-  loader: <LoadingModal />
-};
+Home.auth = {};

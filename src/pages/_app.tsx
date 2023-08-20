@@ -8,6 +8,8 @@ import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import dynamic from 'next/dynamic';
 import { createQueryClient } from '@/lib/api/query-client';
+import LoadingModal from '@/components/common/modals/LoadingModal';
+import { cn } from '@/utils/css-class-merge';
 
 export type NextPageWithLayoutAndAuth<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactElement;
@@ -45,7 +47,7 @@ export default function App({
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <SessionProvider session={session}>
-          <main className={inter.variable}>
+          <main className={cn(inter.variable, 'h-full')}>
             {Component.auth ? (
               <Auth loader={Component.auth.loader}>{getLayout(<Component {...pageProps} />)}</Auth>
             ) : (
@@ -57,6 +59,11 @@ export default function App({
                 <ReactQueryDevtools />
               </Suspense>
             )}
+            <style jsx global>{`
+              #__next {
+                height: 100%;
+              }
+            `}</style>
           </main>
         </SessionProvider>
       </Hydrate>
@@ -68,7 +75,7 @@ function Auth({ children, loader }: { children: React.ReactElement; loader?: Rea
   const { status } = useSession({ required: true });
 
   if (status === 'loading') {
-    return loader ?? null;
+    return loader ?? <LoadingModal />;
   }
 
   return children;

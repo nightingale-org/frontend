@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-import useActiveConversationStatus from '@/hooks/use-active-conversation-status';
+import useConversationId from '@/hooks/use-conversation-id';
 import MessageBox from './MessageBox';
 import type { Message } from '../lib/api/schemas';
 
@@ -13,7 +13,7 @@ const MessageBody: React.FC<BodyProps> = ({ initialMessages }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
-  const { conversationId } = useActiveConversationStatus();
+  const conversationId = useConversationId();
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);

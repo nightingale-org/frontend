@@ -1,6 +1,6 @@
 import { blobToDataUri, blobToFile } from '@/utils/files';
 import React, { memo, useCallback, useRef } from 'react';
-import Modal from '@/components/modals/Modal';
+import Modal from '@/components/common/modals/Modal';
 import { Button } from '@/components/ui/button';
 import 'croppie/croppie.css';
 import type { default as Croppie, ResultOptions } from 'croppie';
