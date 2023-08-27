@@ -3,9 +3,8 @@ import { RelationshipTypeExpanded } from '@/lib/api/schemas';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle2, MessageCircle, MoreVertical, XCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { formatRelationshipType } from '@/utils/formatting';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,16 +26,22 @@ import {
   useRemoveFriend,
   useUpdateRelationshipStatus
 } from '@/hooks/queries/use-relationship-relationships';
+import Link from 'next/link';
+import AnimatedIcon from '@/components/common/AnimatedIcon';
+import { useRouter } from 'next/router';
 
 interface RelationshipListItemProps {
   relationship: RelationShip;
 }
 
 const RelationshipListItem = ({ relationship }: RelationshipListItemProps) => {
+  const router = useRouter();
   const removeFriend = useRemoveFriend(relationship.id);
   const updateRelationshipStatus = useUpdateRelationshipStatus(relationship.id);
 
-  const onFriendRemoval = () => {
+  const onFriendRemoval: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    // Prevent the click event from bubbling up to the parent element and opening a conversation
+    e.stopPropagation();
     removeFriend.mutate();
   };
   const handleAcceptRequest = () => {
@@ -46,8 +51,24 @@ const RelationshipListItem = ({ relationship }: RelationshipListItemProps) => {
     updateRelationshipStatus.mutate('ignored');
   };
 
+  const handleOpenConversation: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      if (relationship.type !== RelationshipTypeExpanded.settled) return;
+      if (e.target instanceof HTMLElement) {
+        if (e.target.dataset.stoppropagation === 'true') return;
+      }
+
+      void router.push(`/conversations/${relationship.conversation_id}/`);
+    },
+    [router, relationship.conversation_id, relationship.type]
+  );
+
   return (
-    <div className="group relative flex w-full cursor-pointer items-center space-x-3 rounded-lg p-3 transition hover:bg-neutral-100">
+    <div
+      role="button"
+      onClick={handleOpenConversation}
+      className="group relative flex w-full cursor-pointer items-center space-x-3 rounded-lg p-3 transition hover:bg-neutral-100"
+    >
       <Avatar>
         <AvatarImage src={relationship.target.image} />
         <AvatarFallback>{relationship.target.username}</AvatarFallback>
@@ -69,9 +90,15 @@ const RelationshipListItem = ({ relationship }: RelationshipListItemProps) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]">
-                <MessageCircle />
-              </div>
+              {relationship.type === RelationshipTypeExpanded.settled &&
+              relationship.conversation_id ? (
+                <Link
+                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]"
+                  href={`/conversations/${relationship.conversation_id}/`}
+                >
+                  <AnimatedIcon fillColorOnHover Icon={MessageCircle} />
+                </Link>
+              ) : null}
             </TooltipTrigger>
             <TooltipContent>
               <p className="text-xs">Message</p>
@@ -83,14 +110,16 @@ const RelationshipListItem = ({ relationship }: RelationshipListItemProps) => {
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 p-2 transition group-hover:brightness-[98%]">
-                      <MoreVertical />
+                      <AnimatedIcon fillColorOnHover Icon={MoreVertical} />
                     </div>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
                 <DropdownMenuContent className="w-16 text-red-500">
                   <AlertDialogTrigger asChild>
                     <DropdownMenuItem>
-                      <span className="text-xs">Remove friend</span>
+                      <span className="text-xs" data-stoppropagation="true">
+                        Remove friend
+                      </span>
                     </DropdownMenuItem>
                   </AlertDialogTrigger>
                 </DropdownMenuContent>
@@ -104,7 +133,7 @@ const RelationshipListItem = ({ relationship }: RelationshipListItemProps) => {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel data-stoppropagation="true">Cancel</AlertDialogCancel>
                   <AlertDialogAction onClick={onFriendRemoval}>Remove friend</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

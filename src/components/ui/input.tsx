@@ -3,10 +3,12 @@ import { useState } from 'react';
 
 import { cn } from '@/utils/css-class-merge';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  wrapperClassName?: string;
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, maxLength, onChange, ...props }, ref) => {
+  ({ className, type, maxLength, onChange, wrapperClassName, ...props }, ref) => {
     const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState(
       typeof props.value === 'string'
         ? maxLength
@@ -24,7 +26,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div className="relative">
+      <div className={cn('relative', wrapperClassName)}>
         <input
           type={type}
           className={cn(

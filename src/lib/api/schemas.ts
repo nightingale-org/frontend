@@ -94,6 +94,7 @@ export type ConversationPreviewSchemaPaginated = z.infer<typeof ConversationPrev
 export const RelationShipSchema = z.object({
   id: z.string(),
   target: UserSchema,
-  type: z.nativeEnum(RelationshipTypeExpanded)
+  type: z.nativeEnum(RelationshipTypeExpanded),
+  conversation_id: z.string().nullish()
 });
 export type RelationShip = z.infer<typeof RelationShipSchema>;

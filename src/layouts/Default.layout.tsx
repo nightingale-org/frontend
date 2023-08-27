@@ -4,7 +4,7 @@ import RightColumn from '@/components/RightColumn/RightColumn';
 
 export default function DefaultLayout({ children }) {
   return (
-    <div className="grid h-full md:grid-cols-[auto_auto_1fr]">
+    <div className="h-full divide-x md:grid md:grid-cols-[auto_1fr] lg:grid-cols-[auto_auto_1fr]">
       <DesktopSidebar />
       <div className="col-span-full md:col-auto">{children}</div>
       <RightColumn />
