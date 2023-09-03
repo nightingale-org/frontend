@@ -19,3 +19,7 @@ export type Route =
 export type DehydratedProps = {
   dehydratedState: DehydratedState;
 };
+
+export type Emoji = {
+  native: string;
+};

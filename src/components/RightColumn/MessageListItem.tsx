@@ -36,7 +36,7 @@ const MessageListItem = forwardRef<HTMLDivElement, MessageListItemProps>(
           )}
         >
           {message.text}
-          <span className="relative bottom-auto left-1 top-1 float-right flex max-w-full items-center text-[0.6rem] font-normal">
+          <span className="relative bottom-auto left-1 top-1 float-right flex max-w-full touch-none select-none items-center text-[0.6rem] font-normal">
             <span title="Aug 26, 2023, 8:52:44 PM" className="opacity-60">
               {new Date(message.created_at).toLocaleDateString('en-US', {
                 hour: 'numeric',

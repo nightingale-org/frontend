@@ -3,12 +3,12 @@ import { useCallback, useEffect, useRef } from 'react';
 import focusEditableElement from '@/utils/focus-editable-element';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import type { EmojiEntry } from 'emoji-mart';
 import { cn } from '@/utils/css-class-merge';
 import useFlag from '@/hooks/use-flag';
 import { moveCaretToTheEnd } from '@/utils/inputs';
 import { Transition } from '@headlessui/react';
 import AnimatedIcon from '@/components/common/AnimatedIcon';
+import type { Emoji } from '@/@types';
 
 type MessageInputProps = {
   onUpdate: (text: string) => void;
@@ -52,7 +52,7 @@ export default function MessageInput({
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(
     (e) => {
-      const { isComposing } = e;
+      const { isComposing } = e.nativeEvent;
 
       if (!isComposing && e.key === 'Enter' && !e.shiftKey && textAreaDifRef.current) {
         e.preventDefault();
@@ -85,7 +85,7 @@ export default function MessageInput({
     }, [setEmojiPickerOpen]);
 
   const onEmojiSelect = useCallback(
-    (emoji: EmojiEntry, event: React.PointerEvent) => {
+    (emoji: Emoji, event: React.PointerEvent) => {
       if (!textAreaDifRef.current) return;
       event.preventDefault();
       focusInput();
