@@ -1,12 +1,14 @@
 import { type AuthorizationData, get, post } from '@/lib/api/fetch';
 import { z } from 'zod';
+import type { Conversation, ConversationPreview } from '@/lib/api/schemas';
 import {
   ConversationPreviewSchema,
   ConversationPreviewSchemaPaginated,
   ExistsResponseSchema,
   RelationShipSchema,
+  UserSchema,
   RelationshipType,
-  UserSchema
+  ConversationSchema
 } from '@/lib/api/schemas';
 
 export async function getConversationPreviews({
@@ -28,14 +30,43 @@ export async function getConversationPreviews({
   });
 }
 
-export async function getConversationPreviewById({
+export async function getConversationById({
   id,
   ctx,
-  accessToken
-}: AuthorizationData & { id: string }) {
+  accessToken,
+  preview
+}: AuthorizationData & { id: string; preview?: never }): Promise<Conversation>;
+export async function getConversationById({
+  id,
+  ctx,
+  accessToken,
+  preview
+}: AuthorizationData & { id: string; preview: false }): Promise<Conversation>;
+export async function getConversationById({
+  id,
+  ctx,
+  accessToken,
+  preview
+}: AuthorizationData & { id: string; preview: true }): Promise<ConversationPreview>;
+export async function getConversationById({
+  id,
+  ctx,
+  accessToken,
+  preview = false
+}: AuthorizationData & { id: string; preview?: boolean }): Promise<
+  Conversation | ConversationPreview
+> {
+  let url = `/conversations/${id}`;
+  if (preview) {
+    url = `${url}?preview=true`;
+  }
+
+  const validationModel = preview ? ConversationPreviewSchema : ConversationSchema;
+
   return await get({
-    url: `/conversations/${id}`,
-    validationModel: ConversationPreviewSchema,
+    url,
+    // @ts-expect-error validationModel is not assignable to type
+    validationModel: validationModel,
     // TODO: fix types
     ctx: ctx as any,
     accessToken: accessToken as any

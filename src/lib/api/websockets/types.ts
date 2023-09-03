@@ -11,6 +11,11 @@ export type RelationshipDeletedEvent = {
   type: RelationshipTypeExpanded;
 };
 
+export type NewMessagePayload = {
+  text: string;
+  conversation_id: string;
+};
+
 export type EventsSeenPayload = {
   type: RelationshipType;
 };
@@ -19,8 +24,10 @@ export interface ServerToClientEvents {
   ['relationship:delete']: (payload: RelationshipDeletedEvent) => void;
   ['relationship:new']: (payload: RelationShip) => void;
   ['relationship:request_rejected']: (payload: FriendRequestRejectedEvent) => void;
+  ['messages:new']: (payload: unknown) => void;
 }
 
 export interface ClientToServerEvents {
   ['relationship:events_seen']: (payload: EventsSeenPayload) => void;
+  ['messages:new']: (payload: NewMessagePayload) => void;
 }

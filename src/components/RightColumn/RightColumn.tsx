@@ -1,17 +1,19 @@
 import useConversationId from '@/hooks/use-conversation-id';
 import MessageContainerHeader from '@/components/RightColumn/MessageContainerHeader';
-import { useGetConversationPreviewById } from '@/hooks/queries/use-conversation-queries';
+import { useGetConversationById } from '@/hooks/queries/use-conversation-queries';
 import MessageInput from '@/components/RightColumn/MessageInput';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import MessageList from './MessageList';
+import { useWebsocket } from '@/hooks/websocket/use-websocket';
 
 export default function RightColumn() {
   const router = useRouter();
   const conversationId = useConversationId();
   const [message, setMessage] = useState('');
+  const websocket = useWebsocket();
 
-  const { data: conversationPreview, isLoading } = useGetConversationPreviewById(conversationId);
+  const { data: conversationPreview, isLoading } = useGetConversationById(conversationId);
 
   const onMessageTextUpdate = useCallback(
     (messageText: string) => {
@@ -19,6 +21,17 @@ export default function RightColumn() {
     },
     [setMessage]
   );
+
+  const sendMessage = useCallback(() => {
+    if (!message || !websocket || !conversationId) return;
+    // TODO: might need to move it to the websocket emit callback
+    setMessage('');
+
+    websocket.emit('messages:new', {
+      conversation_id: conversationId,
+      text: message
+    });
+  }, [websocket, conversationId, message]);
 
   useLayoutEffect(() => {
     const handleCloseChat = (e: KeyboardEvent) => {
@@ -57,6 +70,7 @@ export default function RightColumn() {
       <MessageList />
       <MessageInput
         value={message}
+        sendMessage={sendMessage}
         onUpdate={onMessageTextUpdate}
         placeholder="Send a message..."
         canAutoFocus

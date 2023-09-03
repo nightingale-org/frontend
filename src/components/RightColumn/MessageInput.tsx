@@ -15,12 +15,14 @@ type MessageInputProps = {
   placeholder: string;
   canAutoFocus?: boolean;
   value: string;
+  sendMessage: () => void;
 };
 
 export default function MessageInput({
   onUpdate,
   placeholder,
   value,
+  sendMessage,
   canAutoFocus = true
 }: MessageInputProps) {
   const [emojiPickerOpen, setEmojiPickerOpen, setEmojiPickerClosed] = useFlag();
@@ -29,7 +31,6 @@ export default function MessageInput({
   const textAreaDifRef = useRef<HTMLDivElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<number | null>(null);
-  const emojiPickerTriggerIconRef = useRef<SVGSVGElement | null>(null);
 
   const focusInput = useCallback(() => {
     if (!textAreaDifRef.current) {
@@ -49,15 +50,18 @@ export default function MessageInput({
     }
   }, [focusInput, canAutoFocus]);
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback((e) => {
-    const { isComposing } = e;
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      const { isComposing } = e;
 
-    if (!isComposing && e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-    }
-
-    // TODO: Send a message
-  }, []);
+      if (!isComposing && e.key === 'Enter' && !e.shiftKey && textAreaDifRef.current) {
+        e.preventDefault();
+        textAreaDifRef.current.textContent = '';
+        sendMessage();
+      }
+    },
+    [sendMessage]
+  );
 
   const handleEmojiPickerOpening: React.MouseEventHandler<SVGSVGElement> = () => {
     setEmojiPickerOpen();
@@ -166,7 +170,6 @@ export default function MessageInput({
                 onMouseLeave={handleEmojiPickerMouseLeave}
                 onMouseEnter={handleEmojiPickerMouseEnter}
                 size={25}
-                ref={emojiPickerTriggerIconRef}
                 className="absolute bottom-3 right-2 cursor-pointer"
               />
             </div>

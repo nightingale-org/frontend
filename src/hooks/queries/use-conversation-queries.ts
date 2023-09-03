@@ -1,7 +1,7 @@
 import { useSession } from '@/hooks/use-session';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/api/query-keys';
-import { getConversationPreviewById, getConversationPreviews } from '@/lib/api/query-functions';
+import { getConversationById, getConversationPreviews } from '@/lib/api/query-functions';
 
 export function useGetConversationsPreviews() {
   const { session } = useSession();
@@ -15,19 +15,20 @@ export function useGetConversationsPreviews() {
   });
 }
 
-export function useGetConversationPreviewById(conversationId: string | null) {
+export function useGetConversationById(conversationId: string | null, preview: boolean = false) {
   const { session } = useSession();
 
   return useQuery({
     // @ts-expect-error handled by "enabled" flag
-    queryKey: queryKeys.conversationById(conversationId),
+    queryKey: queryKeys.conversationById(conversationId, preview),
     queryFn: async () => {
-      return await getConversationPreviewById({
+      return await getConversationById({
         // @ts-expect-error handled by "enabled" flag
         id: conversationId,
         accessToken: session.accessToken
       });
     },
+    cacheTime: 1000 * 15, // 15 seconds
     enabled: !!conversationId
   });
 }

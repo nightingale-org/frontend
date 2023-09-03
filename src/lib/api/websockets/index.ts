@@ -9,6 +9,11 @@ export const createWebsocket = (
     autoConnect: false,
     extraHeaders: {
       Authorization: `Bearer ${accessToken}`
+    },
+    auth: {
+      data: {
+        last_updated: undefined
+      }
     }
   });
 };

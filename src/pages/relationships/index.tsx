@@ -84,7 +84,9 @@ export default function RelationShipPage() {
       queryClient.setQueryData(
         queryKeys.relationshipsList(foldRelationshipType(relationship.type)),
         (oldRelationships?: RelationShip[]) => {
-          if (!oldRelationships) return [relationship];
+          if (!oldRelationships) {
+            return [relationship];
+          }
 
           return [relationship, ...oldRelationships];
         }
@@ -94,7 +96,9 @@ export default function RelationShipPage() {
     const onRelationshipDelete = ({ type, relationship_id }: RelationshipDeletedEvent) => {
       queryClient.setQueryData(
         queryKeys.relationshipsList(foldRelationshipType(type)),
-        (old?: RelationShip[]) => old?.filter((r) => r.id !== relationship_id)
+        (old?: RelationShip[]) => {
+          return old?.filter((r) => r.id !== relationship_id);
+        }
       );
     };
 

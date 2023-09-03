@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import { DehydratedProps } from '@/@types';
 import { createQueryClient } from '@/lib/api/query-client';
 import { queryKeys } from '@/lib/api/query-keys';
-import { getConversationPreviewById, getConversationPreviews } from '@/lib/api/query-functions';
+import { getConversationById, getConversationPreviews } from '@/lib/api/query-functions';
 import { dehydrate } from '@tanstack/react-query';
 import ConversationList from '@/components/LeftColumn/conversations/ConversationList';
 
@@ -17,8 +17,8 @@ export const getServerSideProps: GetServerSideProps<DehydratedProps> = async (ct
     queryClient.prefetchInfiniteQuery(queryKeys.conversationsList(), async () => {
       return await getConversationPreviews({ ctx });
     }),
-    queryClient.prefetchQuery(queryKeys.conversationById(conversationId), async () => {
-      return await getConversationPreviewById({ ctx, id: conversationId });
+    queryClient.prefetchQuery(queryKeys.conversationById(conversationId, false), async () => {
+      return await getConversationById({ ctx, id: conversationId, preview: false });
     })
   ]);
 

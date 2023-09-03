@@ -7,7 +7,7 @@ export const queryKeys = {
   conversationsList: () => {
     return ['conversations'];
   },
-  conversationById: (conversationId: string) => {
-    return ['conversations', conversationId];
+  conversationById: (conversationId: string, preview: boolean) => {
+    return ['conversations', conversationId, preview];
   }
 };
