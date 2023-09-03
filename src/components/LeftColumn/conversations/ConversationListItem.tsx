@@ -3,15 +3,17 @@ import type { ConversationPreview } from '@/lib/api/schemas';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatLastMessageOfConversation } from '@/utils/formatting';
 import { useRouter } from 'next/router';
+import { cn } from '@/utils/css-class-merge';
 
 interface ConversationBoxProps {
   conversation: ConversationPreview;
-  selected?: boolean;
   userEmail?: string | null;
 }
 
-const ConversationListItem: React.FC<ConversationBoxProps> = ({ conversation, selected }) => {
+const ConversationListItem: React.FC<ConversationBoxProps> = ({ conversation }) => {
   const router = useRouter();
+  const isActive =
+    router.pathname.startsWith('/conversations') && router.query.id === conversation.id;
 
   const handleClick = () => {
     void router.push(`/conversations/${conversation.id}`);
@@ -22,7 +24,10 @@ const ConversationListItem: React.FC<ConversationBoxProps> = ({ conversation, se
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      className="group relative flex w-full cursor-pointer items-center space-x-3 rounded-lg p-3 transition hover:bg-neutral-100"
+      className={cn(
+        'group relative flex w-full cursor-pointer items-center space-x-3 rounded-lg p-3 transition hover:bg-neutral-100',
+        { 'bg-neutral-100': isActive }
+      )}
     >
       <Avatar>
         <AvatarImage src={conversation.avatar_url} />
