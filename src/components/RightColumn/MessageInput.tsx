@@ -1,5 +1,5 @@
 import { Paperclip, Smile } from 'lucide-react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import focusEditableElement from '@/utils/focus-editable-element';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
@@ -9,6 +9,7 @@ import { moveCaretToTheEnd } from '@/utils/inputs';
 import { Transition } from '@headlessui/react';
 import AnimatedIcon from '@/components/common/AnimatedIcon';
 import type { Emoji } from '@/@types';
+import ContentEditable from '@/components/common/ContentEditable';
 
 type MessageInputProps = {
   onUpdate: (text: string) => void;
@@ -31,24 +32,6 @@ export default function MessageInput({
   const textAreaDifRef = useRef<HTMLDivElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<number | null>(null);
-
-  const focusInput = useCallback(() => {
-    if (!textAreaDifRef.current) {
-      return;
-    }
-
-    focusEditableElement(textAreaDifRef.current);
-  }, []);
-
-  const handleInput = (e: React.ChangeEvent<HTMLDivElement>) => {
-    onUpdate(e.target.textContent || '');
-  };
-
-  useEffect(() => {
-    if (canAutoFocus) {
-      focusInput();
-    }
-  }, [focusInput, canAutoFocus]);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(
     (e) => {
@@ -88,12 +71,12 @@ export default function MessageInput({
     (emoji: Emoji, event: React.PointerEvent) => {
       if (!textAreaDifRef.current) return;
       event.preventDefault();
-      focusInput();
+      focusEditableElement(textAreaDifRef.current);
       onUpdate(`${value}${emoji.native}`);
       textAreaDifRef.current.textContent = `${value}${emoji.native}`;
       moveCaretToTheEnd(textAreaDifRef.current);
     },
-    [focusInput, onUpdate, value]
+    [onUpdate, value]
   );
 
   return (
@@ -112,20 +95,14 @@ export default function MessageInput({
         <AnimatedIcon Icon={Paperclip} className="absolute bottom-3 left-2 cursor-pointer" />
         <div className="max-h-[68px] min-h-[25px] flex-1 overflow-y-auto break-all text-sm leading-5 lg:max-h-[120px] ">
           <div>
-            <div
-              aria-label={placeholder}
-              contentEditable
+            <ContentEditable
               ref={textAreaDifRef}
-              role="textbox"
-              spellCheck="false"
-              tabIndex={0}
-              dir="auto"
-              onClick={focusInput}
-              onInput={handleInput}
               onKeyDown={handleKeyDown}
               onFocus={setTextAreaIsFocused}
               onBlur={setTextAreaIsBlurred}
-              className="select-text whitespace-pre-wrap break-words font-normal text-slate-900 caret-gray-900 outline-none"
+              canAutoFocus={canAutoFocus}
+              onUpdate={onUpdate}
+              placeholder={placeholder}
             />
             <div
               className={cn(
