@@ -35,7 +35,7 @@ export default function RightColumn() {
 
   useLayoutEffect(() => {
     const handleCloseChat = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
+      if (e.key !== 'Escape' || !conversationId) return;
 
       e.preventDefault();
       void router.push('/');
@@ -46,7 +46,7 @@ export default function RightColumn() {
     return () => {
       document.removeEventListener('keydown', handleCloseChat);
     };
-  }, [router]);
+  }, [router, conversationId]);
 
   if (!conversationId) {
     return (
