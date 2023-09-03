@@ -41,7 +41,7 @@ const ConversationList = () => {
         placeholder="Search"
         onChange={onSearchQueryChange}
       />
-      <ScrollArea className="mt-1 flex-1" ref={divContainerRef}>
+      <ScrollArea className="mt-0.5 flex-1" ref={divContainerRef}>
         {isLoading ? (
           <SkeletonContainer
             className="flex flex-col gap-1 p-3"
